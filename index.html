@@ -1,9 +1,820 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>90 Day Workout Plan</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iron90 — 90 Day Workout</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a; --surface: #111111; --card: #161616; --border: #222222;
+    --accent: #e8ff00; --accent2: #ff4d00; --text: #f0f0f0; --muted: #555;
+    --green: #00ff88; --red: #ff3b3b; --yt: #ff4444; --ss: #ff7a00;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events:none; z-index:999; opacity:0.4; }
+
+  header { display:flex; align-items:center; justify-content:space-between; padding:18px 24px; border-bottom:1px solid var(--border); background:var(--surface); position:sticky; top:0; z-index:100; }
+  .logo { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:3px; color:var(--accent); text-shadow:0 0 20px rgba(232,255,0,0.3); }
+  .logo span { color:var(--accent2); }
+  .day-badge { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--muted); letter-spacing:2px; text-align:right; }
+  .day-badge strong { color:var(--accent); font-size:1rem; display:block; }
+
+  nav { display:flex; gap:4px; padding:10px 24px; border-bottom:1px solid var(--border); background:var(--surface); overflow-x:auto; }
+  nav button { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:1px; padding:6px 14px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; border-radius:2px; transition:all 0.15s; white-space:nowrap; text-transform:uppercase; }
+  nav button.active, nav button:hover { background:var(--accent); color:#000; border-color:var(--accent); }
+
+  main { max-width:860px; margin:0 auto; padding:24px 16px; }
+  .view { display:none; }
+  .view.active { display:block; }
+
+  /* HERO */
+  .today-hero { display:grid; grid-template-columns:1fr auto; align-items:start; gap:12px; margin-bottom:24px; }
+  .muscle-tag { display:inline-block; font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:2px; text-transform:uppercase; padding:3px 9px; border:1px solid var(--accent2); color:var(--accent2); border-radius:2px; margin-bottom:6px; }
+  .workout-title { font-family:'Bebas Neue',sans-serif; font-size:2.8rem; letter-spacing:2px; line-height:1; margin-bottom:4px; }
+  .workout-meta { font-family:'DM Mono',monospace; font-size:0.67rem; color:var(--muted); letter-spacing:0.8px; }
+  .complete-btn { font-family:'Bebas Neue',sans-serif; font-size:0.95rem; letter-spacing:2px; padding:11px 20px; background:var(--accent); color:#000; border:none; cursor:pointer; border-radius:2px; transition:all 0.15s; white-space:nowrap; }
+  .complete-btn:hover { background:#fff; }
+  .complete-btn.done { background:var(--green); }
+  .garmin-btn { font-family:'DM Mono',monospace; font-size:0.63rem; letter-spacing:1.5px; padding:8px 14px; background:transparent; border:1px solid #1a5fa8; color:#4d9de0; cursor:pointer; border-radius:2px; transition:all 0.15s; white-space:nowrap; text-transform:uppercase; width:100%; }
+  .garmin-btn:hover { background:#001a33; border-color:#4d9de0; color:#90c8ff; }
+  .garmin-import-steps { font-family:'DM Mono',monospace; font-size:0.72rem; line-height:2; color:var(--muted); }
+  .garmin-import-steps strong { color:var(--text); display:block; margin-top:12px; margin-bottom:2px; font-size:0.78rem; }
+  .garmin-import-steps .step { padding-left:12px; border-left:2px solid var(--border); margin-bottom:3px; }
+  .garmin-success { color:var(--green); font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:1px; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .garmin-success::before { content:'✓'; display:inline-block; width:20px; height:20px; background:var(--green); color:#000; border-radius:50%; text-align:center; line-height:20px; font-size:0.7rem; flex-shrink:0; }
+
+  /* SUPERSET */
+  .superset-block { margin-bottom:18px; }
+  .solo-block { margin-bottom:12px; }
+
+  .superset-header { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .superset-badge { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:2px; text-transform:uppercase; color:var(--ss); background:#1a0e00; border:1px solid #3a2000; padding:3px 10px; border-radius:2px; white-space:nowrap; }
+  .superset-line { flex:1; height:1px; background:linear-gradient(90deg,var(--ss),transparent); }
+
+  .ss-rest-bar { display:flex; align-items:center; gap:8px; padding:5px 14px; margin:-1px 0; font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:1.5px; color:var(--ss); background:linear-gradient(90deg,#1a0e00,transparent); border-left:2px solid var(--ss); }
+
+  /* EXERCISE CARD */
+  .exercise-card { background:var(--card); border:1px solid var(--border); border-radius:4px; overflow:hidden; transition:border-color 0.15s; }
+  .exercise-card.in-ss { border-left:2px solid var(--ss); border-radius:0 4px 4px 0; }
+  .exercise-card:hover { border-color:#2a2a2a; }
+
+  .exercise-header { display:grid; grid-template-columns:1fr auto; align-items:center; padding:13px 15px; cursor:pointer; gap:10px; }
+  .ex-top-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:3px; }
+  .exercise-name { font-family:'Bebas Neue',sans-serif; font-size:1.22rem; letter-spacing:1px; }
+
+  .yt-btn { display:inline-flex; align-items:center; gap:4px; font-family:'DM Mono',monospace; font-size:0.57rem; letter-spacing:1px; padding:3px 8px; border-radius:2px; border:1px solid #2a0a0a; background:#150505; color:var(--yt); text-decoration:none; transition:all 0.15s; white-space:nowrap; }
+  .yt-btn:hover { background:var(--yt); color:#fff; border-color:var(--yt); }
+
+  .exercise-info { font-family:'DM Mono',monospace; font-size:0.63rem; color:var(--muted); }
+  .sets-summary { font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--accent); letter-spacing:1px; white-space:nowrap; }
+  .chevron { color:var(--muted); font-size:0.72rem; transition:transform 0.2s; margin-left:5px; }
+  .exercise-card.open .chevron { transform:rotate(180deg); }
+
+  .sets-panel { display:none; padding:0 15px 13px; border-top:1px solid var(--border); }
+  .sets-panel.open { display:block; }
+
+  .sets-grid { display:grid; grid-template-columns:30px 1fr 1fr 30px; gap:5px; align-items:center; margin-top:10px; }
+  .sets-grid-header { font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:1.5px; color:var(--muted); text-transform:uppercase; padding-bottom:4px; border-bottom:1px solid var(--border); margin-bottom:2px; text-align:center; }
+  .set-num { font-family:'DM Mono',monospace; font-size:0.76rem; color:var(--muted); text-align:center; }
+  .set-input { background:var(--surface); border:1px solid var(--border); color:var(--text); font-family:'DM Mono',monospace; font-size:0.88rem; padding:7px 6px; border-radius:2px; width:100%; text-align:center; transition:border-color 0.15s; }
+  .set-input:focus { outline:none; border-color:var(--accent); color:var(--accent); }
+  .set-check { width:26px; height:26px; border:2px solid var(--border); background:transparent; cursor:pointer; border-radius:2px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; font-size:12px; margin:0 auto; }
+  .set-check.checked { background:var(--accent); border-color:var(--accent); color:#000; }
+  .prev-best { grid-column:1/-1; font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--muted); padding:5px 0; border-top:1px solid var(--border); margin-top:2px; }
+  .prev-best span { color:var(--green); }
+  .note-input { width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.78rem; padding:7px 9px; border-radius:2px; margin-top:10px; resize:none; height:46px; }
+  .note-input:focus { outline:none; border-color:var(--accent); }
+
+  /* REST DAY */
+  .rest-day-card { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:48px; text-align:center; }
+  .rest-day-card .emoji { font-size:3rem; margin-bottom:12px; }
+  .rest-day-card h2 { font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:2px; color:var(--muted); margin-bottom:8px; }
+  .rest-day-card p { font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--muted); }
+
+  /* TAGS */
+  .tag-pill { display:inline-block; font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:1px; padding:2px 7px; border-radius:20px; margin-right:4px; text-transform:uppercase; }
+  .tag-chest { background:#1a1500; color:#ffb800; border:1px solid #332500; }
+  .tag-back { background:#001a1a; color:#00cccc; border:1px solid #003333; }
+  .tag-legs { background:#1a000a; color:#ff4488; border:1px solid #330016; }
+  .tag-shoulders { background:#0d0d1a; color:#8888ff; border:1px solid #1a1a33; }
+  .tag-arms { background:#0a1a00; color:#88ff00; border:1px solid #1a3300; }
+  .tag-core { background:#1a0a00; color:#ff8800; border:1px solid #331500; }
+  .tag-full { background:#001a0a; color:#00ff88; border:1px solid #003319; }
+
+  /* PROGRESS */
+  .section-title { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:2px; margin-bottom:20px; color:var(--accent); }
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:28px; }
+  @media(max-width:500px){ .stats-row{grid-template-columns:repeat(2,1fr);} }
+  .stat-box { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:14px; text-align:center; }
+  .stat-val { font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:2px; color:var(--accent); }
+  .stat-label { font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:1.5px; color:var(--muted); text-transform:uppercase; margin-top:2px; }
+  .progress-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:10px; }
+  .progress-card { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:14px; cursor:pointer; transition:border-color 0.15s; }
+  .progress-card:hover { border-color:var(--accent); }
+  .progress-card-name { font-family:'Bebas Neue',sans-serif; font-size:1.05rem; letter-spacing:1px; margin-bottom:8px; }
+  .progress-chart { display:flex; align-items:flex-end; gap:3px; height:42px; margin-bottom:8px; }
+  .chart-bar { flex:1; background:var(--border); border-radius:1px; min-height:3px; }
+  .chart-bar.latest { background:var(--accent); }
+  .progress-stats { display:flex; justify-content:space-between; font-family:'DM Mono',monospace; font-size:0.62rem; color:var(--muted); }
+  .progress-stats .val { color:var(--text); }
+  .progress-stats .up { color:var(--green); }
+  .progress-stats .down { color:var(--red); }
+
+  /* CALENDAR */
+  .cal-grid { display:grid; grid-template-columns:repeat(10,1fr); gap:4px; margin-bottom:24px; }
+  @media(max-width:600px){ .cal-grid{grid-template-columns:repeat(7,1fr);} }
+  .cal-day { aspect-ratio:1; border-radius:3px; border:1px solid var(--border); background:var(--card); display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:0.52rem; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+  .cal-day:hover { border-color:var(--accent); }
+  .cal-day.completed { background:#1a2a00; border-color:#3a5a00; color:var(--green); }
+  .cal-day.today { border-color:var(--accent); color:var(--accent); }
+  .cal-day.rest { background:#1a1a1a; color:#333; }
+  .cal-day.future { opacity:0.3; cursor:default; }
+  .cal-legend { display:flex; gap:16px; font-family:'DM Mono',monospace; font-size:0.62rem; color:var(--muted); margin-bottom:18px; flex-wrap:wrap; }
+  .cal-legend span { display:flex; align-items:center; gap:6px; }
+  .dot { width:10px; height:10px; border-radius:1px; }
+
+  /* WEEK */
+  .week-strip { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:24px; }
+  .week-day { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:10px 6px; text-align:center; }
+  .week-day.today { border-color:var(--accent); }
+  .week-day.done { border-color:#3a5a00; background:#1a2a00; }
+  .week-day-label { font-family:'DM Mono',monospace; font-size:0.58rem; color:var(--muted); letter-spacing:1px; margin-bottom:4px; text-transform:uppercase; }
+  .week-day-muscle { font-family:'Bebas Neue',sans-serif; font-size:0.78rem; letter-spacing:0.5px; line-height:1.2; }
+  .week-day.today .week-day-muscle { color:var(--accent); }
+
+  /* MODAL */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:200; align-items:center; justify-content:center; padding:20px; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:24px; max-width:460px; width:100%; max-height:80vh; overflow-y:auto; }
+  .modal-title { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:2px; margin-bottom:14px; color:var(--accent); }
+  .history-entry { display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--border); font-family:'DM Mono',monospace; font-size:0.72rem; }
+  .history-date { color:var(--muted); }
+  .history-weight { color:var(--accent); }
+  .modal-close { margin-top:18px; width:100%; padding:9px; background:var(--border); border:none; color:var(--text); font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:1px; cursor:pointer; border-radius:2px; }
+  .modal-close:hover { background:#333; }
+
+  .advance-btn { display:block; margin:24px auto 0; padding:10px 28px; background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:1px; cursor:pointer; border-radius:2px; transition:all 0.15s; }
+  .advance-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  ::-webkit-scrollbar { width:4px; height:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  .superset-block, .solo-block { animation:fadeIn 0.2s ease both; }
+  .superset-block:nth-child(2),.solo-block:nth-child(2){animation-delay:0.04s}
+  .superset-block:nth-child(3),.solo-block:nth-child(3){animation-delay:0.08s}
+  .superset-block:nth-child(4),.solo-block:nth-child(4){animation-delay:0.12s}
+  .superset-block:nth-child(5),.solo-block:nth-child(5){animation-delay:0.16s}
+</style>
 </head>
 <body>
-<h1>Welcome to the 90 Day Workout Plan</h1>
-<p>Content goes here...</p>
+
+<header>
+  <div class="logo">Iron<span>90</span></div>
+  <div class="day-badge"><strong id="currentDayDisplay">1</strong> / 90</div>
+</header>
+<nav>
+  <button class="active" onclick="switchView('today',this)">Today</button>
+  <button onclick="switchView('week',this)">This Week</button>
+  <button onclick="switchView('progress',this)">Progress</button>
+  <button onclick="switchView('calendar',this)">Calendar</button>
+</nav>
+<main>
+  <div class="view active" id="view-today"><div id="todayContent"></div></div>
+  <div class="view" id="view-week">
+    <div class="section-title">WEEK OVERVIEW</div>
+    <div class="week-strip" id="weekStrip"></div>
+    <div id="weekDetails"></div>
+  </div>
+  <div class="view" id="view-progress">
+    <div class="section-title">STRENGTH PROGRESS</div>
+    <div class="stats-row" id="globalStats"></div>
+    <div class="progress-grid" id="progressGrid"></div>
+  </div>
+  <div class="view" id="view-calendar">
+    <div class="section-title">90-DAY CALENDAR</div>
+    <div class="cal-legend">
+      <span><div class="dot" style="background:#1a2a00;border:1px solid #3a5a00"></div>Completed</span>
+      <span><div class="dot" style="border:1px solid var(--accent)"></div>Today</span>
+      <span><div class="dot" style="background:#1a1a1a;border:1px solid #222"></div>Rest</span>
+      <span><div class="dot" style="opacity:0.3;background:#161616;border:1px solid #222"></div>Upcoming</span>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+</main>
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle"></div>
+    <div id="modalContent"></div>
+    <button class="modal-close" onclick="closeModalDirect()">CLOSE</button>
+  </div>
+</div>
+
+<script>
+// ────────────────────────────────────────────────────
+// EXERCISE DATABASE
+// ss = superset group letter (null = solo)
+// ytSearch = YouTube search query
+// ────────────────────────────────────────────────────
+const GROUPS = {
+  'Chest + Triceps': { tag:'chest', exercises:[
+    {name:'Bench Press',          sets:4,reps:'6–8',   muscles:'Chest, Triceps, Front Delt',     ytSearch:'bench+press+proper+form+tutorial',          ss:'A'},
+    {name:'Tricep Pushdown',      sets:4,reps:'12–15', muscles:'Triceps',                         ytSearch:'cable+tricep+pushdown+form+tutorial',       ss:'A'},
+    {name:'Incline DB Press',     sets:3,reps:'10–12', muscles:'Upper Chest',                     ytSearch:'incline+dumbbell+press+form+tutorial',      ss:'B'},
+    {name:'Skull Crushers',       sets:3,reps:'10–12', muscles:'Long Head Tricep',                ytSearch:'skull+crushers+proper+form+tutorial',       ss:'B'},
+    {name:'Cable Fly',            sets:3,reps:'13–15', muscles:'Chest Stretch & Peak',            ytSearch:'cable+chest+fly+form+tutorial',             ss:null},
+  ]},
+  'Back + Biceps': { tag:'back', exercises:[
+    {name:'Deadlift',             sets:4,reps:'4–6',   muscles:'Back, Glutes, Hamstrings',        ytSearch:'deadlift+proper+form+tutorial+beginners',   ss:null},
+    {name:'Pull-Ups',             sets:3,reps:'6–10',  muscles:'Lats, Biceps',                    ytSearch:'pull+ups+proper+form+tutorial',             ss:'A'},
+    {name:'Barbell Curl',         sets:3,reps:'10–12', muscles:'Biceps',                          ytSearch:'barbell+curl+proper+form+tutorial',         ss:'A'},
+    {name:'Barbell Row',          sets:3,reps:'8–10',  muscles:'Mid Back, Rhomboids',             ytSearch:'barbell+row+proper+form+tutorial',          ss:'B'},
+    {name:'Hammer Curl',          sets:3,reps:'12–15', muscles:'Brachialis, Forearm',             ytSearch:'hammer+curl+proper+form+tutorial',          ss:'B'},
+  ]},
+  'Legs': { tag:'legs', exercises:[
+    {name:'Squat',                sets:4,reps:'5–7',   muscles:'Quads, Glutes, Core',             ytSearch:'squat+proper+form+tutorial+beginners',      ss:null},
+    {name:'Romanian Deadlift',    sets:3,reps:'10–12', muscles:'Hamstrings, Glutes',              ytSearch:'romanian+deadlift+form+tutorial',           ss:'A'},
+    {name:'Calf Raise',           sets:4,reps:'15–20', muscles:'Calves',                          ytSearch:'standing+calf+raise+form+tutorial',         ss:'A'},
+    {name:'Leg Press',            sets:3,reps:'12–15', muscles:'Quads, Glutes',                   ytSearch:'leg+press+proper+form+foot+placement',      ss:'B'},
+    {name:'Leg Curl',             sets:3,reps:'12–15', muscles:'Hamstrings',                      ytSearch:'leg+curl+machine+proper+form+tutorial',     ss:'B'},
+  ]},
+  'Shoulders': { tag:'shoulders', exercises:[
+    {name:'Overhead Press',       sets:4,reps:'6–8',   muscles:'Delts, Triceps',                  ytSearch:'overhead+press+proper+form+tutorial',       ss:'A'},
+    {name:'Lateral Raise',        sets:4,reps:'15–20', muscles:'Side Delts',                      ytSearch:'lateral+raise+proper+form+no+cheating',     ss:'A'},
+    {name:'Face Pull',            sets:3,reps:'15–20', muscles:'Rear Delts, Rotator Cuff',        ytSearch:'face+pull+proper+form+cable+tutorial',      ss:'B'},
+    {name:'Front Raise',          sets:3,reps:'12–15', muscles:'Front Delts',                     ytSearch:'dumbbell+front+raise+form+tutorial',        ss:'B'},
+    {name:'Shrug',                sets:3,reps:'12–15', muscles:'Traps',                           ytSearch:'barbell+shrug+proper+form+tutorial',        ss:null},
+  ]},
+  'Arms + Core': { tag:'arms', exercises:[
+    {name:'EZ Bar Curl',          sets:4,reps:'10–12', muscles:'Biceps',                          ytSearch:'ez+bar+curl+proper+form+tutorial',          ss:'A'},
+    {name:'Rope Pushdown',        sets:4,reps:'12–15', muscles:'Triceps',                         ytSearch:'rope+tricep+pushdown+proper+form',          ss:'A'},
+    {name:'Preacher Curl',        sets:3,reps:'10–12', muscles:'Biceps Peak',                     ytSearch:'preacher+curl+proper+form+tutorial',        ss:'B'},
+    {name:'Overhead Tricep Ext',  sets:3,reps:'12–15', muscles:'Long Head Tricep',                ytSearch:'overhead+tricep+extension+cable+form',      ss:'B'},
+    {name:'Plank',                sets:3,reps:'45–60s',muscles:'Core, Abs',                       ytSearch:'plank+proper+form+core+tutorial',           ss:'C'},
+    {name:'Cable Crunch',         sets:3,reps:'15–20', muscles:'Abs',                             ytSearch:'cable+crunch+proper+form+abs+tutorial',     ss:'C'},
+  ]},
+  'Full Body': { tag:'full', exercises:[
+    {name:'Power Clean',          sets:4,reps:'3–5',   muscles:'Full Body, Power Output',         ytSearch:'power+clean+form+tutorial+beginners',       ss:'A'},
+    {name:'Arnold Press',         sets:3,reps:'10–12', muscles:'All Delt Heads',                  ytSearch:'arnold+press+proper+form+tutorial',         ss:'A'},
+    {name:'Weighted Dip',         sets:3,reps:'8–10',  muscles:'Chest, Triceps',                  ytSearch:'weighted+dips+proper+form+tutorial',        ss:'B'},
+    {name:'Chin-Up',              sets:3,reps:'6–10',  muscles:'Back, Biceps',                    ytSearch:'chin+up+proper+form+tutorial',              ss:'B'},
+    {name:'Bulgarian Split Squat',sets:3,reps:'10 ea', muscles:'Quads, Glutes, Balance',          ytSearch:'bulgarian+split+squat+form+tutorial',       ss:null},
+  ]},
+};
+
+// Phase 2/3 swap exercise names (inherit same ss grouping + muscles)
+const PHASE_NAMES = [
+  {
+    'Chest + Triceps': ['Bench Press','Tricep Pushdown','Incline DB Press','Skull Crushers','Cable Fly'],
+    'Back + Biceps':   ['Deadlift','Pull-Ups','Barbell Curl','Barbell Row','Hammer Curl'],
+    'Legs':            ['Squat','Romanian Deadlift','Calf Raise','Leg Press','Leg Curl'],
+    'Shoulders':       ['Overhead Press','Lateral Raise','Face Pull','Front Raise','Shrug'],
+    'Arms + Core':     ['EZ Bar Curl','Rope Pushdown','Preacher Curl','Overhead Tricep Ext','Plank','Cable Crunch'],
+    'Full Body':       ['Power Clean','Arnold Press','Weighted Dip','Chin-Up','Bulgarian Split Squat'],
+  },
+  {
+    'Chest + Triceps': ['Dumbbell Bench Press','Close-Grip Bench','Decline DB Press','Diamond Pushup','Pec Deck'],
+    'Back + Biceps':   ['Sumo Deadlift','Weighted Pull-Up','Incline Curl','T-Bar Row','Reverse Curl'],
+    'Legs':            ['Front Squat','Stiff-Leg Deadlift','Seated Calf Raise','Hack Squat','Nordic Curl'],
+    'Shoulders':       ['DB Shoulder Press','Cable Lateral Raise','Rear Delt Fly','Plate Front Raise','Upright Row'],
+    'Arms + Core':     ['Spider Curl','V-Bar Pushdown','Concentration Curl','Tricep Kickback','Ab Wheel','Leg Raise'],
+    'Full Body':       ['Hang Clean','Push Press','Ring Dip','Neutral-Grip Pull-Up','Goblet Squat'],
+  },
+  {
+    'Chest + Triceps': ['Incline Barbell Press','JM Press','Low-to-High Cable Fly','Incline Tricep Ext','Chest Dip'],
+    'Back + Biceps':   ['Rack Pull','Weighted Chin-Up','Scott Curl','Pendlay Row','Zottman Curl'],
+    'Legs':            ['Pause Squat','Glute-Ham Raise','Donkey Calf Raise','Belt Squat','Leg Extension'],
+    'Shoulders':       ['Z-Press','Band Pull-Apart','W-Raise','Cable Front Raise','Power Shrug'],
+    'Arms + Core':     ['Drag Curl','Overhead Extension','Machine Curl','CG Pushdown','Dragon Flag','Pallof Press'],
+    'Full Body':       ['Snatch-Grip DL','Bradford Press','Muscle-Up','L-Sit Pull-Up','Zercher Squat'],
+  }
+];
+
+const YT = {
+  'Dumbbell Bench Press':'dumbbell+bench+press+form+tutorial',
+  'Close-Grip Bench':'close+grip+bench+press+form+tutorial',
+  'Decline DB Press':'decline+dumbbell+press+form+tutorial',
+  'Diamond Pushup':'diamond+push+up+proper+form',
+  'Pec Deck':'pec+deck+machine+form+tutorial',
+  'Sumo Deadlift':'sumo+deadlift+proper+form+tutorial',
+  'Weighted Pull-Up':'weighted+pull+up+form+tutorial',
+  'Incline Curl':'incline+dumbbell+curl+form+tutorial',
+  'T-Bar Row':'t+bar+row+proper+form+tutorial',
+  'Reverse Curl':'reverse+curl+form+tutorial',
+  'Front Squat':'front+squat+proper+form+tutorial',
+  'Stiff-Leg Deadlift':'stiff+leg+deadlift+form+tutorial',
+  'Seated Calf Raise':'seated+calf+raise+form+tutorial',
+  'Hack Squat':'hack+squat+machine+form+tutorial',
+  'Nordic Curl':'nordic+hamstring+curl+form+tutorial',
+  'DB Shoulder Press':'dumbbell+shoulder+press+form+tutorial',
+  'Cable Lateral Raise':'cable+lateral+raise+form+tutorial',
+  'Rear Delt Fly':'rear+delt+fly+dumbbell+form+tutorial',
+  'Plate Front Raise':'plate+front+raise+form+tutorial',
+  'Upright Row':'upright+row+proper+form+tutorial',
+  'Spider Curl':'spider+curl+form+tutorial',
+  'V-Bar Pushdown':'v+bar+tricep+pushdown+form',
+  'Concentration Curl':'concentration+curl+proper+form',
+  'Tricep Kickback':'tricep+kickback+proper+form',
+  'Ab Wheel':'ab+wheel+rollout+proper+form',
+  'Leg Raise':'hanging+leg+raise+proper+form',
+  'Hang Clean':'hang+clean+form+tutorial',
+  'Push Press':'push+press+form+tutorial',
+  'Ring Dip':'ring+dips+form+tutorial',
+  'Neutral-Grip Pull-Up':'neutral+grip+pull+up+form',
+  'Goblet Squat':'goblet+squat+proper+form+tutorial',
+  'Incline Barbell Press':'incline+barbell+press+form+tutorial',
+  'JM Press':'jm+press+form+tutorial',
+  'Low-to-High Cable Fly':'low+to+high+cable+fly+form',
+  'Incline Tricep Ext':'incline+tricep+extension+form',
+  'Chest Dip':'chest+dip+proper+form+tutorial',
+  'Rack Pull':'rack+pull+form+tutorial',
+  'Weighted Chin-Up':'weighted+chin+up+form+tutorial',
+  'Scott Curl':'scott+curl+preacher+form+tutorial',
+  'Pendlay Row':'pendlay+row+form+tutorial',
+  'Zottman Curl':'zottman+curl+form+tutorial',
+  'Pause Squat':'pause+squat+form+tutorial',
+  'Glute-Ham Raise':'glute+ham+raise+form+tutorial',
+  'Donkey Calf Raise':'donkey+calf+raise+form+tutorial',
+  'Belt Squat':'belt+squat+machine+form+tutorial',
+  'Leg Extension':'leg+extension+machine+form',
+  'Z-Press':'z+press+overhead+seated+floor+form',
+  'Band Pull-Apart':'band+pull+apart+shoulder+health',
+  'W-Raise':'w+raise+rear+delt+form',
+  'Cable Front Raise':'cable+front+raise+form+tutorial',
+  'Power Shrug':'power+shrug+form+tutorial',
+  'Drag Curl':'drag+curl+form+tutorial',
+  'Overhead Extension':'overhead+tricep+extension+form',
+  'Machine Curl':'machine+bicep+curl+form',
+  'CG Pushdown':'close+grip+pushdown+tricep+form',
+  'Dragon Flag':'dragon+flag+proper+form+tutorial',
+  'Pallof Press':'pallof+press+form+tutorial',
+  'Snatch-Grip DL':'snatch+grip+deadlift+form+tutorial',
+  'Bradford Press':'bradford+press+form+tutorial',
+  'Muscle-Up':'muscle+up+form+tutorial',
+  'L-Sit Pull-Up':'l+sit+pull+up+form',
+  'Zercher Squat':'zercher+squat+form+tutorial',
+};
+
+const SCHEDULE = ['Chest + Triceps','Back + Biceps','Legs','Shoulders','Arms + Core','Full Body','REST'];
+
+// ────────────────────────────────────────────────────
+// STATE
+// ────────────────────────────────────────────────────
+let S = JSON.parse(localStorage.getItem('iron90v2')||'null') || { currentDay:1, completedDays:{}, sets:{}, notes:{} };
+const save = () => localStorage.setItem('iron90v2', JSON.stringify(S));
+
+function getDayInfo(d) {
+  const wi = (d-1) % 7;
+  const pi = d<=21 ? 0 : d<=63 ? 1 : 2;
+  const deload = (Math.floor((d-1)/7)+1) % 4 === 0 && wi < 6;
+  const group = SCHEDULE[wi];
+  if (group==='REST') return {group:'REST',pi,deload:false,exercises:[]};
+  const names = PHASE_NAMES[pi][group];
+  const base = GROUPS[group];
+  const exercises = names.map((name,i) => {
+    const b = base.exercises[i] || base.exercises[0];
+    return { name, sets:deload?Math.max(2,b.sets-1):b.sets, reps:b.reps, muscles:b.muscles, ytSearch:YT[name]||b.ytSearch, ss:b.ss };
+  });
+  return {group, tag:base.tag, pi, deload, exercises};
+}
+
+function getBest(ex) {
+  let best=null, bd=null;
+  for (let d=1;d<S.currentDay;d++) for (let s=0;s<6;s++) {
+    const e=S.sets[`${d}_${ex}_${s}`];
+    if (e?.weight && parseFloat(e.weight)>(parseFloat(best)||0)) {best=e.weight;bd=d;}
+  }
+  return best?{weight:best,day:bd}:null;
+}
+
+function getHistory(ex) {
+  let h=[];
+  for (let d=1;d<=S.currentDay;d++) {
+    let mx=null;
+    for (let s=0;s<6;s++) { const e=S.sets[`${d}_${ex}_${s}`]; if(e?.weight&&parseFloat(e.weight)>(parseFloat(mx)||0)) mx=e.weight; }
+    if (mx) h.push({day:d,weight:mx});
+  }
+  return h;
+}
+
+// ────────────────────────────────────────────────────
+// VIEW SWITCHER
+// ────────────────────────────────────────────────────
+function switchView(name, btn) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  ({today:renderToday,week:renderWeek,progress:renderProgress,calendar:renderCalendar})[name]();
+}
+
+// ────────────────────────────────────────────────────
+// TODAY
+// ────────────────────────────────────────────────────
+function renderToday() {
+  const day = S.currentDay;
+  document.getElementById('currentDayDisplay').textContent = day;
+  const info = getDayInfo(day);
+  const el = document.getElementById('todayContent');
+
+  if (info.group==='REST') {
+    el.innerHTML=`<div class="rest-day-card"><div class="emoji">😴</div><h2>REST DAY</h2><p>Day ${day} of 90 — Recovery is growth.</p><p style="margin-top:8px">Stretch. Walk. Sleep well.</p><button class="advance-btn" onclick="advanceDay()">NEXT DAY →</button></div>`;
+    return;
+  }
+
+  const done = !!S.completedDays[day];
+  const pNames = ['FOUNDATION','VOLUME','PEAK'];
+
+  // Group exercises into superset blocks and solo blocks
+  const groupMap = {};
+  const order = [];
+  info.exercises.forEach((ex,i) => {
+    if (!ex.ss) { order.push({type:'solo',ex,i}); return; }
+    if (!groupMap[ex.ss]) { groupMap[ex.ss]={type:'ss',label:ex.ss,items:[]}; order.push(groupMap[ex.ss]); }
+    groupMap[ex.ss].items.push({ex,i});
+  });
+
+  let html = `<div class="today-hero">
+    <div>
+      <div class="muscle-tag">${info.group}${info.deload?' — DELOAD':''}</div>
+      <div class="workout-title">${info.group.toUpperCase()}</div>
+      <div class="workout-meta">Week ${Math.ceil(day/7)} · Phase ${info.pi+1}: ${pNames[info.pi]} · ${info.exercises.length} exercises · ⚡ Supersets for elevated HR</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;align-items:stretch;min-width:130px">
+      <button class="complete-btn ${done?'done':''}" onclick="toggleDone(${day})">${done?'✓ DONE':'MARK DONE'}</button>
+      ${done?`<button class="garmin-btn" onclick="exportToGarmin(${day})">⬇ GARMIN EXPORT</button>`:''}
+    </div>
+  </div>`;
+
+  order.forEach(block => {
+    if (block.type==='solo') {
+      html += `<div class="solo-block">${exCard(block.ex, block.i, day, info.tag, false)}</div>`;
+    } else {
+      html += `<div class="superset-block">
+        <div class="superset-header">
+          <div class="superset-badge">⚡ SUPERSET ${block.label}</div>
+          <div class="superset-line"></div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--muted);white-space:nowrap">No rest between exercises</div>
+        </div>`;
+      block.items.forEach(({ex,i},j) => {
+        html += exCard(ex, i, day, info.tag, true);
+        if (j < block.items.length-1) html += `<div class="ss-rest-bar">⟳ &nbsp;REST 30–45 SEC, THEN NEXT EXERCISE IN SUPERSET</div>`;
+      });
+      html += `</div>`;
+    }
+  });
+
+  html += `<button class="advance-btn" onclick="advanceDay()">ADVANCE TO DAY ${Math.min(day+1,90)} →</button>`;
+  el.innerHTML = html;
+  // Open first card
+  const first = el.querySelector('.exercise-card');
+  if (first) { first.classList.add('open'); document.getElementById('panel_'+first.dataset.i).classList.add('open'); }
+}
+
+function exCard(ex, i, day, tag, inSS) {
+  const best = getBest(ex.name);
+  const ytUrl = `https://www.youtube.com/results?search_query=${ex.ytSearch}`;
+  const safeN = ex.name.replace(/'/g,"\\'");
+  let sets = `<div class="sets-grid">
+    <div class="set-num sets-grid-header">#</div>
+    <div class="sets-grid-header">WEIGHT (lbs)</div>
+    <div class="sets-grid-header">REPS</div>
+    <div class="sets-grid-header">✓</div>`;
+  for (let s=0;s<ex.sets;s++) {
+    const k=`${day}_${ex.name}_${s}`, e=S.sets[k]||{};
+    sets += `<div class="set-num">${s+1}</div>
+      <input class="set-input" type="number" placeholder="lbs" value="${e.weight||''}" min="0" step="2.5" onchange="saveSet(${day},'${safeN}',${s},'weight',this.value)">
+      <input class="set-input" type="number" placeholder="${ex.reps}" value="${e.reps||''}" min="0" onchange="saveSet(${day},'${safeN}',${s},'reps',this.value)">
+      <div class="set-check ${e.done?'checked':''}" onclick="toggleSetDone(${day},'${safeN}',${s},this)">${e.done?'✓':''}</div>`;
+  }
+  if (best) sets += `<div class="prev-best">Previous best: <span>${best.weight} lbs</span> (Day ${best.day})</div>`;
+  sets += `</div>`;
+  const noteK = `${day}_${ex.name}_note`;
+  const noteV = (S.notes[noteK]||'').replace(/'/g,"&#39;");
+
+  return `<div class="exercise-card${inSS?' in-ss':''}" id="excard_${i}" data-i="${i}">
+    <div class="exercise-header" onclick="toggleCard(${i})">
+      <div>
+        <div class="ex-top-row">
+          <span class="exercise-name">${ex.name}</span>
+          <a class="yt-btn" href="${ytUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">▶ FORM VIDEO</a>
+        </div>
+        <div class="exercise-info"><span class="tag-pill tag-${tag}">${tag}</span>${ex.sets} sets × ${ex.reps} · ${ex.muscles}</div>
+      </div>
+      <div style="display:flex;align-items:center">
+        <div class="sets-summary">${ex.sets}×${ex.reps}</div>
+        <div class="chevron">▼</div>
+      </div>
+    </div>
+    <div class="sets-panel" id="panel_${i}">${sets}
+      <textarea class="note-input" placeholder="Notes for this exercise..." onchange="saveNote(${day},'${safeN}',this.value)">${noteV}</textarea>
+    </div>
+  </div>`;
+}
+
+function toggleCard(i) {
+  const c=document.getElementById('excard_'+i), p=document.getElementById('panel_'+i);
+  c.classList.toggle('open'); p.classList.toggle('open');
+}
+function saveSet(day,ex,s,f,v){const k=`${day}_${ex}_${s}`;if(!S.sets[k])S.sets[k]={};S.sets[k][f]=v;save();}
+function toggleSetDone(day,ex,s,el){const k=`${day}_${ex}_${s}`;if(!S.sets[k])S.sets[k]={};S.sets[k].done=!S.sets[k].done;el.classList.toggle('checked');el.innerHTML=S.sets[k].done?'✓':'';save();}
+function saveNote(day,ex,v){S.notes[`${day}_${ex}_note`]=v;save();}
+function toggleDone(day){S.completedDays[day]=!S.completedDays[day];save();renderToday();}
+function advanceDay(){if(S.currentDay<90){S.currentDay++;save();renderToday();}}
+
+// ────────────────────────────────────────────────────
+// WEEK
+// ────────────────────────────────────────────────────
+function renderWeek() {
+  const day=S.currentDay, ws=Math.floor((day-1)/7)*7+1;
+  const DAYS=['MON','TUE','WED','THU','FRI','SAT','SUN'];
+  document.getElementById('weekStrip').innerHTML = Array.from({length:7},(_,i)=>{
+    const d=ws+i, info=getDayInfo(d);
+    const lbl=info.group==='REST'?'REST':info.group.split(' ')[0];
+    return `<div class="week-day ${d===day?'today':''} ${S.completedDays[d]?'done':''}"><div class="week-day-label">${DAYS[i]}</div><div class="week-day-muscle">${lbl}</div></div>`;
+  }).join('');
+
+  document.getElementById('weekDetails').innerHTML = Array.from({length:7},(_,i)=>{
+    const d=ws+i, info=getDayInfo(d);
+    if (info.group==='REST') return '';
+    return `<div style="margin-bottom:18px">
+      <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:1px;margin-bottom:8px">${DAYS[i]} · DAY ${d}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        ${info.exercises.map(ex=>`<div style="background:var(--card);border:1px solid var(--border);border-radius:3px;padding:7px 11px;font-family:'DM Mono',monospace;font-size:0.67rem">
+          ${ex.ss?`<span style="color:var(--ss);font-size:0.56rem;margin-right:4px">⚡${ex.ss}</span>`:''}${ex.name} <span style="color:var(--muted)">${ex.sets}×${ex.reps}</span>
+        </div>`).join('')}
+      </div></div>`;
+  }).join('');
+}
+
+// ────────────────────────────────────────────────────
+// PROGRESS
+// ────────────────────────────────────────────────────
+function renderProgress() {
+  const done=Object.values(S.completedDays).filter(Boolean).length;
+  const sets=Object.values(S.sets).filter(s=>s.done).length;
+  const ws=Object.values(S.sets).map(s=>parseFloat(s.weight)||0).filter(w=>w>0);
+  const maxW=ws.length?Math.max(...ws):0;
+  let streak=0;
+  for (let d=S.currentDay;d>=1;d--){if(getDayInfo(d).group==='REST')continue;if(S.completedDays[d])streak++;else break;}
+
+  document.getElementById('globalStats').innerHTML=`
+    <div class="stat-box"><div class="stat-val">${done}</div><div class="stat-label">Days Done</div></div>
+    <div class="stat-box"><div class="stat-val">${sets}</div><div class="stat-label">Sets Logged</div></div>
+    <div class="stat-box"><div class="stat-val">${maxW||'—'}</div><div class="stat-label">Max Weight</div></div>
+    <div class="stat-box"><div class="stat-val">${streak}</div><div class="stat-label">Streak</div></div>`;
+
+  const exSet=new Set();
+  for (let d=1;d<=S.currentDay;d++) getDayInfo(d).exercises.forEach(ex=>exSet.add(ex.name));
+  let grid='';
+  [...exSet].forEach(name=>{
+    const h=getHistory(name); if(!h.length)return;
+    const ws=h.map(e=>parseFloat(e.weight)), mx=Math.max(...ws), last=ws[ws.length-1], prev=ws.length>1?ws[ws.length-2]:null;
+    const delta=prev!=null?last-prev:null;
+    const disp=h.slice(-10), dw=disp.map(e=>parseFloat(e.weight)), mdw=Math.max(...dw,1);
+    const bars=dw.map((w,i)=>`<div class="chart-bar${i===dw.length-1?' latest':''}" style="height:${(w/mdw*100).toFixed(0)}%"></div>`).join('');
+    const dStr=delta!=null?(delta>0?`<span class="up">↑${delta}</span>`:delta<0?`<span class="down">↓${Math.abs(delta)}</span>`:`<span>→</span>`):'';
+    grid+=`<div class="progress-card" onclick="showHist('${name.replace(/'/g,"\\'")}')">
+      <div class="progress-card-name">${name}</div>
+      <div class="progress-chart">${bars}</div>
+      <div class="progress-stats"><span>Best: <span class="val">${mx} lbs</span></span><span>Last: <span class="val">${last}</span> ${dStr}</span></div>
+    </div>`;
+  });
+  document.getElementById('progressGrid').innerHTML=grid||`<p style="font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted)">Log weights to see progress charts here.</p>`;
+}
+
+// ────────────────────────────────────────────────────
+// CALENDAR
+// ────────────────────────────────────────────────────
+function renderCalendar() {
+  document.getElementById('calGrid').innerHTML=Array.from({length:90},(_,i)=>{
+    const d=i+1, info=getDayInfo(d);
+    const cls=[info.group==='REST'?'rest':'',S.completedDays[d]?'completed':'',d===S.currentDay?'today':'',d>S.currentDay?'future':''].filter(Boolean).join(' ');
+    return `<div class="cal-day ${cls}" title="Day ${d}: ${info.group}" onclick="${d<=S.currentDay?`jumpTo(${d})`:''}">  ${d}</div>`;
+  }).join('');
+}
+function jumpTo(d){S.currentDay=d;save();switchView('today',document.querySelector('nav button'));}
+
+// ────────────────────────────────────────────────────
+// MODAL
+// ────────────────────────────────────────────────────
+function showHist(name){
+  document.getElementById('modalTitle').textContent=name.toUpperCase();
+  const h=getHistory(name).reverse();
+  document.getElementById('modalContent').innerHTML=h.length?h.map(e=>`<div class="history-entry"><span class="history-date">Day ${e.day}</span><span class="history-weight">${e.weight} lbs</span></div>`).join(''):`<p style="font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted)">No data yet.</p>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(e){if(e.target.id==='modalOverlay')closeModalDirect();}
+function closeModalDirect(){document.getElementById('modalOverlay').classList.remove('open');}
+
+// ════════════════════════════════════════════════════
+// FIT FILE ENCODER — Garmin Connect Export
+// ════════════════════════════════════════════════════
+
+const FIT_EPOCH = 631065600; // Unix ts of Jan 1 1990 00:00:00 UTC
+
+class FITFile {
+  constructor() { this.buf = []; this.defs = {}; }
+
+  // CRC-16 per FIT spec
+  static crc(data) {
+    const T = [0x0000,0xCC01,0xD801,0x1400,0xF001,0x3C00,0x2800,0xE401,
+               0xA001,0x6C00,0x7800,0xB401,0x5000,0x9C01,0x8801,0x4400];
+    let c = 0;
+    for (const b of data) {
+      let t = T[c & 0xF]; c = (c >> 4) & 0x0FFF; c ^= t ^ T[b & 0xF];
+      t = T[c & 0xF]; c = (c >> 4) & 0x0FFF; c ^= t ^ T[(b >> 4) & 0xF];
+    }
+    return c;
+  }
+
+  // Define a local message type
+  // fields: [{def, size, base}]  base type codes: 0x00=ENUM,0x02=UINT8,0x84=UINT16,0x86=UINT32
+  define(local, global, fields) {
+    this.defs[local] = fields;
+    this.buf.push(0x40 | local, 0x00, 0x00); // def header, reserved, little-endian
+    this.buf.push(global & 0xFF, (global >> 8) & 0xFF);
+    this.buf.push(fields.length);
+    for (const f of fields) this.buf.push(f.def, f.size, f.base);
+  }
+
+  // Write a data record
+  write(local, vals) {
+    this.buf.push(local);
+    this.defs[local].forEach((f, i) => {
+      const v = (vals[i] == null) ? null : Math.max(0, Math.round(vals[i]));
+      if (v === null) { for (let j = 0; j < f.size; j++) this.buf.push(0xFF); return; }
+      for (let j = 0; j < f.size; j++) this.buf.push((v >>> (j * 8)) & 0xFF);
+    });
+  }
+
+  build() {
+    const dLen = this.buf.length;
+    // 14-byte header: size(1) + proto(1) + profile(2) + dataLen(4) + ".FIT"(4)
+    const hdr = [14, 0x10, 0x30, 0x08,
+                 dLen & 0xFF, (dLen >> 8) & 0xFF, (dLen >> 16) & 0xFF, (dLen >> 24) & 0xFF,
+                 0x2E, 0x46, 0x49, 0x54];
+    const hCRC = FITFile.crc(hdr);
+    hdr.push(hCRC & 0xFF, (hCRC >> 8) & 0xFF);
+    const all = [...hdr, ...this.buf];
+    const fCRC = FITFile.crc(all);
+    all.push(fCRC & 0xFF, (fCRC >> 8) & 0xFF);
+    return new Uint8Array(all);
+  }
+}
+
+function generateWorkoutFIT(dayNum, info) {
+  const now = Date.now();
+  const fitNow = Math.floor(now / 1000) - FIT_EPOCH;
+
+  // Estimate workout start based on total sets (~2 min per set avg)
+  const totalSets = info.exercises.reduce((a, ex) => a + ex.sets, 0);
+  const estDurSec = totalSets * 120 + 600; // sets + warmup
+  const fitStart = fitNow - estDurSec;
+
+  const fit = new FITFile();
+
+  // ── file_id (global 0) ─────────────────────────
+  fit.define(0, 0, [
+    {def:0, size:1, base:0x00}, // type: 4=activity
+    {def:1, size:2, base:0x84}, // manufacturer
+    {def:2, size:2, base:0x84}, // product
+    {def:4, size:4, base:0x86}, // time_created
+  ]);
+  fit.write(0, [4, 255, 0, fitStart]);
+
+  // ── event: timer start (global 21) ────────────
+  fit.define(1, 21, [
+    {def:253, size:4, base:0x86}, // timestamp
+    {def:0,   size:1, base:0x00}, // event: 0=timer
+    {def:1,   size:1, base:0x00}, // event_type: 0=start
+    {def:4,   size:1, base:0x02}, // event_group
+  ]);
+  fit.write(1, [fitStart, 0, 0, 0]);
+
+  // ── set messages (global 225) ──────────────────
+  // field 254=timestamp, 0=duration(ms), 3=reps, 4=weight(kg*100,scale=100), 5=set_type
+  fit.define(2, 225, [
+    {def:254, size:4, base:0x86}, // timestamp
+    {def:0,   size:4, base:0x86}, // duration ms
+    {def:3,   size:2, base:0x84}, // repetitions
+    {def:4,   size:2, base:0x84}, // weight kg*100
+    {def:5,   size:1, base:0x00}, // set_type: 0=active
+  ]);
+
+  let t = fitStart + 60; // 60s warmup
+  info.exercises.forEach(ex => {
+    for (let s = 0; s < ex.sets; s++) {
+      const key = `${dayNum}_${ex.name}_${s}`;
+      const entry = S.sets[key] || {};
+      const lbs = parseFloat(entry.weight) || 0;
+      const kg = lbs * 0.453592;
+      const wStored = Math.round(kg * 100); // scale=100, stored as kg*100
+      const repsStr = String(entry.reps || ex.reps || '10');
+      const reps = parseInt(repsStr) || 10;
+      const durMs = Math.max(reps * 3000, 10000); // ~3s/rep, min 10s
+      fit.write(2, [t, durMs, reps, wStored, 0]);
+      t += Math.round(durMs / 1000) + 90; // set time + 90s rest
+    }
+  });
+
+  const fitEnd = t;
+  const elapsedMs = (fitEnd - fitStart) * 1000;
+
+  // ── event: timer stop ─────────────────────────
+  fit.write(1, [fitEnd, 0, 4, 0]); // event_type 4=stop_all
+
+  // ── lap (global 19) ───────────────────────────
+  fit.define(3, 19, [
+    {def:253, size:4, base:0x86}, // timestamp
+    {def:2,   size:4, base:0x86}, // start_time
+    {def:7,   size:4, base:0x86}, // total_elapsed_time (ms)
+    {def:8,   size:4, base:0x86}, // total_timer_time (ms)
+    {def:0,   size:1, base:0x00}, // event: 0=timer
+    {def:1,   size:1, base:0x00}, // event_type: 9=stop_disable_all
+    {def:24,  size:1, base:0x00}, // lap_trigger: 7=session_end
+    {def:25,  size:1, base:0x00}, // sport: 4=fitness_equipment
+  ]);
+  fit.write(3, [fitEnd, fitStart, elapsedMs, elapsedMs, 0, 9, 7, 4]);
+
+  // ── session (global 18) ───────────────────────
+  fit.define(4, 18, [
+    {def:253, size:4, base:0x86}, // timestamp
+    {def:2,   size:4, base:0x86}, // start_time
+    {def:7,   size:4, base:0x86}, // total_elapsed_time (ms)
+    {def:8,   size:4, base:0x86}, // total_timer_time (ms)
+    {def:0,   size:1, base:0x00}, // event: 0=timer
+    {def:1,   size:1, base:0x00}, // event_type: 9=stop_disable_all
+    {def:5,   size:1, base:0x00}, // sport: 4=fitness_equipment
+    {def:6,   size:1, base:0x00}, // sub_sport: 20=strength_training
+    {def:25,  size:2, base:0x84}, // first_lap_index
+    {def:26,  size:2, base:0x84}, // num_laps
+  ]);
+  fit.write(4, [fitEnd, fitStart, elapsedMs, elapsedMs, 0, 9, 4, 20, 0, 1]);
+
+  // ── activity (global 34) ─────────────────────
+  fit.define(5, 34, [
+    {def:253, size:4, base:0x86}, // timestamp
+    {def:0,   size:4, base:0x86}, // total_timer_time (ms)
+    {def:1,   size:2, base:0x84}, // num_sessions
+    {def:2,   size:1, base:0x00}, // type: 0=manual
+    {def:3,   size:1, base:0x00}, // event: 26=activity
+    {def:4,   size:1, base:0x00}, // event_type: 1=stop
+    {def:5,   size:4, base:0x86}, // local_timestamp
+  ]);
+  fit.write(5, [fitEnd, elapsedMs, 1, 0, 26, 1, fitEnd]);
+
+  return fit.build();
+}
+
+function downloadFIT(bytes, filename) {
+  const blob = new Blob([bytes], {type: 'application/octet-stream'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function exportToGarmin(day) {
+  const info = getDayInfo(day);
+  if (info.group === 'REST') return;
+
+  const safeName = info.group.replace(/[^a-zA-Z0-9]/g, '_');
+  const filename = `Iron90_Day${day}_${safeName}.fit`;
+
+  try {
+    const bytes = generateWorkoutFIT(day, info);
+    downloadFIT(bytes, filename);
+
+    document.getElementById('modalTitle').textContent = 'EXPORTED TO GARMIN';
+    document.getElementById('modalContent').innerHTML = `
+      <div class="garmin-success">${filename} downloaded</div>
+      <div class="garmin-import-steps">
+        <strong>📱 Garmin Connect App (iPhone/Android)</strong>
+        <div class="step">1. Open <strong style="color:var(--text);display:inline">Garmin Connect</strong> app</div>
+        <div class="step">2. Tap <strong style="color:var(--text);display:inline">☰ More</strong> → <strong style="color:var(--text);display:inline">Import Data</strong></div>
+        <div class="step">3. Select the downloaded <strong style="color:var(--text);display:inline">.fit</strong> file</div>
+        <div class="step">4. Tap <strong style="color:var(--text);display:inline">Import</strong> — done ✓</div>
+
+        <strong>🖥 Garmin Connect Web</strong>
+        <div class="step">1. Go to <strong style="color:var(--text);display:inline">connect.garmin.com</strong></div>
+        <div class="step">2. Click the <strong style="color:var(--text);display:inline">cloud ↑ import icon</strong> (top right)</div>
+        <div class="step">3. Select your .fit file → Import</div>
+
+        <div style="margin-top:14px;padding:10px;background:#111;border:1px solid #222;border-radius:3px;font-size:0.65rem;color:var(--muted);line-height:1.7">
+          The activity will appear as <strong style="color:var(--text)">Strength Training</strong> with all your sets, reps, and weights visible inside Garmin Connect.
+        </div>
+      </div>`;
+    document.getElementById('modalOverlay').classList.add('open');
+  } catch(e) {
+    alert('Export failed: ' + e.message);
+  }
+}
+
+renderToday();
+</script>
 </body>
 </html>
