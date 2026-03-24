@@ -168,6 +168,79 @@
   .superset-block:nth-child(3),.solo-block:nth-child(3){animation-delay:0.08s}
   .superset-block:nth-child(4),.solo-block:nth-child(4){animation-delay:0.12s}
   .superset-block:nth-child(5),.solo-block:nth-child(5){animation-delay:0.16s}
+
+  /* ── NUTRITION ── */
+  .setup-card { background:var(--card); border:1px solid var(--accent); border-radius:4px; padding:24px; margin-bottom:24px; }
+  .setup-card h3 { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:2px; color:var(--accent); margin-bottom:16px; }
+  .setup-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; margin-bottom:14px; }
+  .setup-field label { display:block; font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:1.5px; color:var(--muted); text-transform:uppercase; margin-bottom:5px; }
+  .setup-field input, .setup-field select { width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); font-family:'DM Mono',monospace; font-size:0.88rem; padding:8px 10px; border-radius:2px; }
+  .setup-field input:focus, .setup-field select:focus { outline:none; border-color:var(--accent); }
+  .setup-field select option { background:var(--surface); }
+  .save-setup-btn { font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:2px; padding:10px 28px; background:var(--accent); color:#000; border:none; cursor:pointer; border-radius:2px; transition:all 0.15s; }
+  .save-setup-btn:hover { background:#fff; }
+
+  .macro-banner { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px; }
+  @media(max-width:480px){ .macro-banner{grid-template-columns:repeat(2,1fr);} }
+  .macro-box { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:12px; text-align:center; position:relative; overflow:hidden; }
+  .macro-box::after { content:''; position:absolute; bottom:0; left:0; height:3px; width:var(--fill,0%); transition:width 0.4s ease; }
+  .macro-box.cal::after { background:var(--accent); }
+  .macro-box.pro::after { background:#ff6b6b; }
+  .macro-box.carb::after { background:#ffd93d; }
+  .macro-box.fat::after { background:#6bcb77; }
+  .macro-val { font-family:'Bebas Neue',sans-serif; font-size:1.7rem; letter-spacing:1px; line-height:1; }
+  .macro-val.cal { color:var(--accent); }
+  .macro-val.pro { color:#ff6b6b; }
+  .macro-val.carb { color:#ffd93d; }
+  .macro-val.fat { color:#6bcb77; }
+  .macro-label { font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:1px; color:var(--muted); text-transform:uppercase; margin-top:3px; }
+  .macro-target { font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--muted); margin-top:2px; }
+
+  .meal-section { margin-bottom:16px; }
+  .meal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .meal-name { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+  .meal-cals { font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--accent); }
+  .add-food-btn { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:1px; padding:4px 10px; background:transparent; border:1px solid var(--border); color:var(--muted); cursor:pointer; border-radius:2px; transition:all 0.15s; }
+  .add-food-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  .food-entry { display:grid; grid-template-columns:1fr repeat(4,auto); gap:6px; align-items:center; padding:8px 10px; background:var(--card); border:1px solid var(--border); border-radius:3px; margin-bottom:5px; }
+  .food-name { font-family:'DM Sans',sans-serif; font-size:0.82rem; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .food-macro { font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--muted); white-space:nowrap; }
+  .food-macro.c { color:var(--accent); }
+  .del-food { background:transparent; border:none; color:#333; cursor:pointer; font-size:0.8rem; padding:2px 4px; border-radius:2px; transition:color 0.15s; }
+  .del-food:hover { color:var(--red); }
+
+  /* add food drawer */
+  .add-food-drawer { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:14px; margin-bottom:10px; display:none; }
+  .add-food-drawer.open { display:block; }
+  .drawer-title { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:1.5px; color:var(--accent); text-transform:uppercase; margin-bottom:10px; }
+  .food-search-row { display:flex; gap:6px; margin-bottom:10px; }
+  .food-search-input { flex:1; background:var(--bg); border:1px solid var(--border); color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.82rem; padding:7px 10px; border-radius:2px; }
+  .food-search-input:focus { outline:none; border-color:var(--accent); }
+  .food-quick-list { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; }
+  .food-quick-chip { font-family:'DM Mono',monospace; font-size:0.6rem; padding:4px 9px; border:1px solid var(--border); color:var(--muted); background:transparent; border-radius:20px; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
+  .food-quick-chip:hover { border-color:var(--accent); color:var(--accent); }
+  .custom-food-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr 1fr; gap:6px; margin-bottom:8px; }
+  @media(max-width:500px){ .custom-food-grid{grid-template-columns:1fr 1fr;} }
+  .custom-food-grid input { background:var(--bg); border:1px solid var(--border); color:var(--text); font-family:'DM Mono',monospace; font-size:0.8rem; padding:7px 8px; border-radius:2px; width:100%; }
+  .custom-food-grid input:focus { outline:none; border-color:var(--accent); }
+  .custom-food-grid input::placeholder { color:#333; font-size:0.7rem; }
+  .log-food-btn { font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:1.5px; padding:8px 18px; background:var(--accent); color:#000; border:none; cursor:pointer; border-radius:2px; width:100%; transition:all 0.15s; }
+  .log-food-btn:hover { background:#fff; }
+
+  .date-nav { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+  .date-nav-btn { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'DM Mono',monospace; font-size:0.8rem; padding:5px 12px; cursor:pointer; border-radius:2px; transition:all 0.15s; }
+  .date-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .date-nav-label { font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--text); letter-spacing:1px; flex:1; text-align:center; }
+
+  .nutrition-divider { height:1px; background:var(--border); margin:16px 0; }
+  .weight-log-row { display:flex; gap:8px; align-items:center; margin-bottom:20px; }
+  .weight-log-row input { background:var(--surface); border:1px solid var(--border); color:var(--text); font-family:'DM Mono',monospace; font-size:0.88rem; padding:8px 10px; border-radius:2px; width:110px; }
+  .weight-log-row input:focus { outline:none; border-color:var(--accent); }
+  .weight-log-btn { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:1px; padding:8px 14px; background:transparent; border:1px solid var(--border); color:var(--muted); cursor:pointer; border-radius:2px; transition:all 0.15s; text-transform:uppercase; }
+  .weight-log-btn:hover { border-color:var(--green); color:var(--green); }
+  .weight-tag { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--muted); }
+  .weight-tag span { color:var(--green); }
 </style>
 </head>
 <body>
@@ -181,6 +254,7 @@
   <button onclick="switchView('week',this)">This Week</button>
   <button onclick="switchView('progress',this)">Progress</button>
   <button onclick="switchView('calendar',this)">Calendar</button>
+  <button onclick="switchView('nutrition',this)">🥩 Nutrition</button>
 </nav>
 <main>
   <div class="view active" id="view-today"><div id="todayContent"></div></div>
@@ -204,6 +278,7 @@
     </div>
     <div class="cal-grid" id="calGrid"></div>
   </div>
+  <div class="view" id="view-nutrition"><div id="nutritionContent"></div></div>
 </main>
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal">
@@ -408,7 +483,7 @@ function switchView(name, btn) {
   document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
   if (btn) btn.classList.add('active');
-  ({today:renderToday,week:renderWeek,progress:renderProgress,calendar:renderCalendar})[name]();
+  ({today:renderToday,week:renderWeek,progress:renderProgress,calendar:renderCalendar,nutrition:renderNutrition})[name]();
 }
 
 // ────────────────────────────────────────────────────
@@ -611,207 +686,400 @@ function closeModal(e){if(e.target.id==='modalOverlay')closeModalDirect();}
 function closeModalDirect(){document.getElementById('modalOverlay').classList.remove('open');}
 
 // ════════════════════════════════════════════════════
-// FIT FILE ENCODER — Garmin Connect Export
+// TCX GENERATOR — Garmin Connect Export
+// TCX is plain XML — no binary encoding, guaranteed to work
 // ════════════════════════════════════════════════════
 
-const FIT_EPOCH = 631065600; // Unix ts of Jan 1 1990 00:00:00 UTC
+function generateWorkoutTCX(dayNum, info) {
+  const now = new Date();
+  const totalSets = info.exercises.reduce((s, ex) => s + ex.sets, 0);
+  const durationSec = totalSets * 110 + 300;
+  const startTime = new Date(now.getTime() - durationSec * 1000);
 
-class FITFile {
-  constructor() { this.buf = []; this.defs = {}; }
+  // Format to ISO 8601
+  const fmt = d => d.toISOString();
 
-  // CRC-16 per FIT spec
-  static crc(data) {
-    const T = [0x0000,0xCC01,0xD801,0x1400,0xF001,0x3C00,0x2800,0xE401,
-               0xA001,0x6C00,0x7800,0xB401,0x5000,0x9C01,0x8801,0x4400];
-    let c = 0;
-    for (const b of data) {
-      let t = T[c & 0xF]; c = (c >> 4) & 0x0FFF; c ^= t ^ T[b & 0xF];
-      t = T[c & 0xF]; c = (c >> 4) & 0x0FFF; c ^= t ^ T[(b >> 4) & 0xF];
-    }
-    return c;
-  }
-
-  // Define a local message type
-  // fields: [{def, size, base}]  base type codes: 0x00=ENUM,0x02=UINT8,0x84=UINT16,0x86=UINT32
-  define(local, global, fields) {
-    this.defs[local] = fields;
-    this.buf.push(0x40 | local, 0x00, 0x00); // def header, reserved, little-endian
-    this.buf.push(global & 0xFF, (global >> 8) & 0xFF);
-    this.buf.push(fields.length);
-    for (const f of fields) this.buf.push(f.def, f.size, f.base);
-  }
-
-  // Write a data record
-  write(local, vals) {
-    this.buf.push(local);
-    this.defs[local].forEach((f, i) => {
-      const v = (vals[i] == null) ? null : Math.max(0, Math.round(vals[i]));
-      if (v === null) { for (let j = 0; j < f.size; j++) this.buf.push(0xFF); return; }
-      for (let j = 0; j < f.size; j++) this.buf.push((v >>> (j * 8)) & 0xFF);
-    });
-  }
-
-  build() {
-    const dLen = this.buf.length;
-    // 14-byte header: size(1) + proto(1) + profile(2) + dataLen(4) + ".FIT"(4)
-    const hdr = [14, 0x10, 0x30, 0x08,
-                 dLen & 0xFF, (dLen >> 8) & 0xFF, (dLen >> 16) & 0xFF, (dLen >> 24) & 0xFF,
-                 0x2E, 0x46, 0x49, 0x54];
-    const hCRC = FITFile.crc(hdr);
-    hdr.push(hCRC & 0xFF, (hCRC >> 8) & 0xFF);
-    const all = [...hdr, ...this.buf];
-    const fCRC = FITFile.crc(all);
-    all.push(fCRC & 0xFF, (fCRC >> 8) & 0xFF);
-    return new Uint8Array(all);
-  }
-}
-
-function generateWorkoutFIT(dayNum, info) {
-  const now = Date.now();
-  const fitNow = Math.floor(now / 1000) - FIT_EPOCH;
-
-  // Estimate workout start based on total sets (~2 min per set avg)
-  const totalSets = info.exercises.reduce((a, ex) => a + ex.sets, 0);
-  const estDurSec = totalSets * 120 + 600; // sets + warmup
-  const fitStart = fitNow - estDurSec;
-
-  const fit = new FITFile();
-
-  // ── file_id (global 0) ─────────────────────────
-  fit.define(0, 0, [
-    {def:0, size:1, base:0x00}, // type: 4=activity
-    {def:1, size:2, base:0x84}, // manufacturer
-    {def:2, size:2, base:0x84}, // product
-    {def:4, size:4, base:0x86}, // time_created
-  ]);
-  fit.write(0, [4, 255, 0, fitStart]);
-
-  // ── event: timer start (global 21) ────────────
-  fit.define(1, 21, [
-    {def:253, size:4, base:0x86}, // timestamp
-    {def:0,   size:1, base:0x00}, // event: 0=timer
-    {def:1,   size:1, base:0x00}, // event_type: 0=start
-    {def:4,   size:1, base:0x02}, // event_group
-  ]);
-  fit.write(1, [fitStart, 0, 0, 0]);
-
-  // ── set messages (global 225) ──────────────────
-  // field 254=timestamp, 0=duration(ms), 3=reps, 4=weight(kg*100,scale=100), 5=set_type
-  fit.define(2, 225, [
-    {def:254, size:4, base:0x86}, // timestamp
-    {def:0,   size:4, base:0x86}, // duration ms
-    {def:3,   size:2, base:0x84}, // repetitions
-    {def:4,   size:2, base:0x84}, // weight kg*100
-    {def:5,   size:1, base:0x00}, // set_type: 0=active
-  ]);
-
-  let t = fitStart + 60; // 60s warmup
-  info.exercises.forEach(ex => {
+  // Build exercise notes with logged weights
+  const notes = info.exercises.map(ex => {
+    const setLines = [];
     for (let s = 0; s < ex.sets; s++) {
-      const key = `${dayNum}_${ex.name}_${s}`;
-      const entry = S.sets[key] || {};
-      const lbs = parseFloat(entry.weight) || 0;
-      const kg = lbs * 0.453592;
-      const wStored = Math.round(kg * 100); // scale=100, stored as kg*100
-      const repsStr = String(entry.reps || ex.reps || '10');
-      const reps = parseInt(repsStr) || 10;
-      const durMs = Math.max(reps * 3000, 10000); // ~3s/rep, min 10s
-      fit.write(2, [t, durMs, reps, wStored, 0]);
-      t += Math.round(durMs / 1000) + 90; // set time + 90s rest
+      const k = `${dayNum}_${ex.name}_${s}`;
+      const e = S.sets[k] || {};
+      const w = e.weight ? `${e.weight}lbs` : '—';
+      const r = e.reps   ? `${e.reps} reps` : ex.reps;
+      setLines.push(`  Set ${s+1}: ${w} × ${r}`);
     }
-  });
+    return `${ex.name} (${ex.sets}×${ex.reps})\n${setLines.join('\n')}`;
+  }).join('\n\n');
 
-  const fitEnd = t;
-  const elapsedMs = (fitEnd - fitStart) * 1000;
+  const calories = Math.round(totalSets * 8); // rough estimate
 
-  // ── event: timer stop ─────────────────────────
-  fit.write(1, [fitEnd, 0, 4, 0]); // event_type 4=stop_all
+  const tcx = `<?xml version="1.0" encoding="UTF-8"?>
+<TrainingCenterDatabase
+  xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd">
+  <Activities>
+    <Activity Sport="Other">
+      <Id>${fmt(startTime)}</Id>
+      <Lap StartTime="${fmt(startTime)}">
+        <TotalTimeSeconds>${durationSec}</TotalTimeSeconds>
+        <Calories>${calories}</Calories>
+        <Intensity>Active</Intensity>
+        <TriggerMethod>Manual</TriggerMethod>
+      </Lap>
+      <Notes>Iron90 — Day ${dayNum} — ${info.group}
+Phase ${info.pi + 1} | Week ${Math.ceil(dayNum/7)}${info.deload ? ' | DELOAD' : ''}
 
-  // ── lap (global 19) ───────────────────────────
-  fit.define(3, 19, [
-    {def:253, size:4, base:0x86}, // timestamp
-    {def:2,   size:4, base:0x86}, // start_time
-    {def:7,   size:4, base:0x86}, // total_elapsed_time (ms)
-    {def:8,   size:4, base:0x86}, // total_timer_time (ms)
-    {def:0,   size:1, base:0x00}, // event: 0=timer
-    {def:1,   size:1, base:0x00}, // event_type: 9=stop_disable_all
-    {def:24,  size:1, base:0x00}, // lap_trigger: 7=session_end
-    {def:25,  size:1, base:0x00}, // sport: 4=fitness_equipment
-  ]);
-  fit.write(3, [fitEnd, fitStart, elapsedMs, elapsedMs, 0, 9, 7, 4]);
+${notes}</Notes>
+    </Activity>
+  </Activities>
+</TrainingCenterDatabase>`;
 
-  // ── session (global 18) ───────────────────────
-  fit.define(4, 18, [
-    {def:253, size:4, base:0x86}, // timestamp
-    {def:2,   size:4, base:0x86}, // start_time
-    {def:7,   size:4, base:0x86}, // total_elapsed_time (ms)
-    {def:8,   size:4, base:0x86}, // total_timer_time (ms)
-    {def:0,   size:1, base:0x00}, // event: 0=timer
-    {def:1,   size:1, base:0x00}, // event_type: 9=stop_disable_all
-    {def:5,   size:1, base:0x00}, // sport: 4=fitness_equipment
-    {def:6,   size:1, base:0x00}, // sub_sport: 20=strength_training
-    {def:25,  size:2, base:0x84}, // first_lap_index
-    {def:26,  size:2, base:0x84}, // num_laps
-  ]);
-  fit.write(4, [fitEnd, fitStart, elapsedMs, elapsedMs, 0, 9, 4, 20, 0, 1]);
-
-  // ── activity (global 34) ─────────────────────
-  fit.define(5, 34, [
-    {def:253, size:4, base:0x86}, // timestamp
-    {def:0,   size:4, base:0x86}, // total_timer_time (ms)
-    {def:1,   size:2, base:0x84}, // num_sessions
-    {def:2,   size:1, base:0x00}, // type: 0=manual
-    {def:3,   size:1, base:0x00}, // event: 26=activity
-    {def:4,   size:1, base:0x00}, // event_type: 1=stop
-    {def:5,   size:4, base:0x86}, // local_timestamp
-  ]);
-  fit.write(5, [fitEnd, elapsedMs, 1, 0, 26, 1, fitEnd]);
-
-  return fit.build();
-}
-
-function downloadFIT(bytes, filename) {
-  const blob = new Blob([bytes], {type: 'application/octet-stream'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filename; a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  return tcx;
 }
 
 function exportToGarmin(day) {
   const info = getDayInfo(day);
   if (info.group === 'REST') return;
 
-  const safeName = info.group.replace(/[^a-zA-Z0-9]/g, '_');
-  const filename = `Iron90_Day${day}_${safeName}.fit`;
-
   try {
-    const bytes = generateWorkoutFIT(day, info);
-    downloadFIT(bytes, filename);
+    const tcx = generateWorkoutTCX(day, info);
+    const safeName = info.group.replace(/[^a-zA-Z0-9]/g, '_');
+    const filename = `Iron90_Day${day}_${safeName}.tcx`;
 
-    document.getElementById('modalTitle').textContent = 'EXPORTED TO GARMIN';
+    const blob = new Blob([tcx], {type: 'application/xml'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+
+    document.getElementById('modalTitle').textContent = 'EXPORT TO GARMIN';
     document.getElementById('modalContent').innerHTML = `
       <div class="garmin-success">${filename} downloaded</div>
       <div class="garmin-import-steps">
-        <strong>📱 Garmin Connect App (iPhone/Android)</strong>
-        <div class="step">1. Open <strong style="color:var(--text);display:inline">Garmin Connect</strong> app</div>
-        <div class="step">2. Tap <strong style="color:var(--text);display:inline">☰ More</strong> → <strong style="color:var(--text);display:inline">Import Data</strong></div>
-        <div class="step">3. Select the downloaded <strong style="color:var(--text);display:inline">.fit</strong> file</div>
-        <div class="step">4. Tap <strong style="color:var(--text);display:inline">Import</strong> — done ✓</div>
+        <strong>🖥 Step 1 — Go to Garmin Connect Web</strong>
+        <div class="step">Open <strong style="color:var(--text);display:inline">connect.garmin.com</strong> in your browser and sign in</div>
 
-        <strong>🖥 Garmin Connect Web</strong>
-        <div class="step">1. Go to <strong style="color:var(--text);display:inline">connect.garmin.com</strong></div>
-        <div class="step">2. Click the <strong style="color:var(--text);display:inline">cloud ↑ import icon</strong> (top right)</div>
-        <div class="step">3. Select your .fit file → Import</div>
+        <strong>📤 Step 2 — Upload the file</strong>
+        <div class="step">Click the <strong style="color:var(--text);display:inline">↑ cloud icon</strong> in the top-right corner</div>
+        <div class="step">Select the <strong style="color:var(--text);display:inline">.tcx</strong> file from your Downloads folder</div>
+        <div class="step">Click <strong style="color:var(--text);display:inline">Import</strong></div>
 
-        <div style="margin-top:14px;padding:10px;background:#111;border:1px solid #222;border-radius:3px;font-size:0.65rem;color:var(--muted);line-height:1.7">
-          The activity will appear as <strong style="color:var(--text)">Strength Training</strong> with all your sets, reps, and weights visible inside Garmin Connect.
+        <strong>📱 Finding the file</strong>
+        <div class="step"><strong style="color:var(--text);display:inline">iPhone:</strong> Files app → On My iPhone → Downloads</div>
+        <div class="step"><strong style="color:var(--text);display:inline">Android:</strong> Files → Downloads</div>
+
+        <div style="margin-top:14px;padding:10px;background:#111;border:1px solid #222;border-radius:3px;font-size:0.65rem;color:var(--muted);line-height:1.8">
+          The activity will show in Garmin Connect with the correct date, duration, and all your exercise notes including sets, reps, and weights. It syncs to your watch automatically.
         </div>
       </div>`;
     document.getElementById('modalOverlay').classList.add('open');
   } catch(e) {
-    alert('Export failed: ' + e.message);
+    alert('Export error: ' + e.message);
   }
+}
+
+// ════════════════════════════════════════════════════
+// NUTRITION TRACKER
+// ════════════════════════════════════════════════════
+
+// Quick-add food database (name, cal, protein, carbs, fat) per 100g or noted serving
+const FOOD_DB = [
+  // Proteins
+  {n:'Chicken Breast (100g)',   cal:165, p:31, c:0,  f:4},
+  {n:'Ground Beef 93% (100g)', cal:152, p:26, c:0,  f:5},
+  {n:'Salmon (100g)',           cal:208, p:20, c:0,  f:13},
+  {n:'Eggs (1 large)',          cal:72,  p:6,  c:0,  f:5},
+  {n:'Greek Yogurt (170g)',     cal:100, p:17, c:6,  f:0},
+  {n:'Cottage Cheese (113g)',   cal:90,  p:12, c:5,  f:2},
+  {n:'Tuna Can (142g)',         cal:130, p:28, c:0,  f:1},
+  {n:'Whey Protein Shake',      cal:130, p:25, c:3,  f:2},
+  // Carbs
+  {n:'White Rice (100g cooked)',cal:130, p:3,  c:28, f:0},
+  {n:'Oatmeal (40g dry)',       cal:150, p:5,  c:27, f:3},
+  {n:'Sweet Potato (medium)',   cal:103, p:2,  c:24, f:0},
+  {n:'Banana (medium)',         cal:105, p:1,  c:27, f:0},
+  {n:'White Bread (1 slice)',   cal:79,  p:3,  c:15, f:1},
+  {n:'Pasta (100g cooked)',     cal:131, p:5,  c:25, f:1},
+  // Fats
+  {n:'Avocado (half)',          cal:120, p:2,  c:6,  f:11},
+  {n:'Almonds (28g)',           cal:164, p:6,  c:6,  f:14},
+  {n:'Olive Oil (1 tbsp)',      cal:119, p:0,  c:0,  f:14},
+  {n:'Peanut Butter (2 tbsp)',  cal:190, p:7,  c:7,  f:16},
+  // Mixed
+  {n:'Whole Milk (240ml)',      cal:149, p:8,  c:12, f:8},
+  {n:'Cheddar Cheese (28g)',    cal:113, p:7,  c:0,  f:9},
+  {n:'Black Beans (100g)',      cal:132, p:9,  c:24, f:1},
+  {n:'Broccoli (100g)',         cal:34,  p:3,  c:7,  f:0},
+  {n:'Spinach (100g)',          cal:23,  p:3,  c:4,  f:0},
+  {n:'Bagel (plain)',           cal:270, p:11, c:53, f:2},
+];
+
+let nutDateOffset = 0; // 0 = today, -1 = yesterday, etc.
+let activeDrawerMeal = null;
+
+function nutDateKey(offset) {
+  const d = new Date(); d.setDate(d.getDate() + offset);
+  return d.toISOString().slice(0,10); // YYYY-MM-DD
+}
+
+function nutDateLabel(offset) {
+  if (offset === 0) return 'TODAY';
+  if (offset === -1) return 'YESTERDAY';
+  const d = new Date(); d.setDate(d.getDate() + offset);
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+
+// ── Calorie / macro targets from profile ──────────────────
+function calcTargets(profile) {
+  if (!profile || !profile.currentWeight || !profile.height || !profile.age) return null;
+  const wtKg = profile.currentWeight * 0.453592;
+  const htCm = profile.heightFt * 30.48 + (profile.heightIn || 0) * 2.54;
+  // Mifflin-St Jeor BMR
+  const bmr = profile.sex === 'F'
+    ? 10 * wtKg + 6.25 * htCm - 5 * profile.age - 161
+    : 10 * wtKg + 6.25 * htCm - 5 * profile.age + 5;
+  const actMult = {sed:1.2, light:1.375, mod:1.55, active:1.725}[profile.activity] || 1.55;
+  const tdee = Math.round(bmr * actMult);
+
+  const goalDiff = (profile.goalWeight || profile.currentWeight) - profile.currentWeight;
+  let calories = tdee;
+  if (goalDiff < -5) calories = tdee - 500;       // lose weight
+  else if (goalDiff > 5) calories = tdee + 300;    // lean bulk
+  // else maintain
+
+  // Macros
+  const proteinG  = Math.round(profile.goalWeight || profile.currentWeight); // 1g per lb goal weight
+  const proteinCal = proteinG * 4;
+  const fatCal    = Math.round(calories * 0.28);
+  const fatG      = Math.round(fatCal / 9);
+  const carbCal   = calories - proteinCal - fatCal;
+  const carbG     = Math.round(carbCal / 4);
+
+  const goal = goalDiff < -5 ? 'cut' : goalDiff > 5 ? 'bulk' : 'maintain';
+  return { calories, proteinG, carbG, fatG, tdee, bmr: Math.round(bmr), goal };
+}
+
+// ── Totals for a day ───────────────────────────────────────
+function getDayTotals(dateKey) {
+  const meals = (S.nutrition && S.nutrition[dateKey]) || {};
+  let cal=0, p=0, c=0, f=0;
+  for (const meal of Object.values(meals)) {
+    for (const item of (meal || [])) { cal+=item.cal; p+=item.p; c+=item.c; f+=item.f; }
+  }
+  return { cal:Math.round(cal), p:Math.round(p), c:Math.round(c), f:Math.round(f) };
+}
+
+// ── Render nutrition view ──────────────────────────────────
+function renderNutrition() {
+  if (!S.nutrition) S.nutrition = {};
+  const profile = S.nutProfile || null;
+  const targets = calcTargets(profile);
+  const dateKey = nutDateKey(nutDateOffset);
+  const totals  = getDayTotals(dateKey);
+  const meals   = S.nutrition[dateKey] || {};
+  const MEAL_NAMES = ['Breakfast','Lunch','Dinner','Snacks'];
+
+  let html = '';
+
+  // ── Profile setup ──
+  const showSetup = !profile || !profile.currentWeight;
+  html += `<div class="setup-card" id="setupCard" style="${showSetup ? '' : 'border-color:var(--border)'}">
+    <h3>${showSetup ? '⚙ SETUP YOUR TARGETS' : '⚙ PROFILE & TARGETS'}</h3>
+    <div class="setup-grid">
+      <div class="setup-field"><label>Current Weight (lbs)</label>
+        <input type="number" id="sp_cw" value="${profile?.currentWeight||''}" placeholder="185"></div>
+      <div class="setup-field"><label>Goal Weight (lbs)</label>
+        <input type="number" id="sp_gw" value="${profile?.goalWeight||''}" placeholder="175"></div>
+      <div class="setup-field"><label>Height (ft)</label>
+        <input type="number" id="sp_hft" value="${profile?.heightFt||''}" placeholder="5"></div>
+      <div class="setup-field"><label>Height (in)</label>
+        <input type="number" id="sp_hin" value="${profile?.heightIn||''}" placeholder="11"></div>
+      <div class="setup-field"><label>Age</label>
+        <input type="number" id="sp_age" value="${profile?.age||''}" placeholder="28"></div>
+      <div class="setup-field"><label>Sex</label>
+        <select id="sp_sex"><option value="M" ${profile?.sex==='M'?'selected':''}>Male</option><option value="F" ${profile?.sex==='F'?'selected':''}>Female</option></select></div>
+      <div class="setup-field"><label>Activity Level</label>
+        <select id="sp_act">
+          <option value="sed"    ${profile?.activity==='sed'   ?'selected':''}>Sedentary (desk job)</option>
+          <option value="light"  ${profile?.activity==='light' ?'selected':''}>Light (1–3x/week)</option>
+          <option value="mod"    ${profile?.activity==='mod'   ?'selected':''}>Moderate (3–5x/week)</option>
+          <option value="active" ${profile?.activity==='active'?'selected':''}>Very Active (6–7x/week)</option>
+        </select></div>
+    </div>
+    <button class="save-setup-btn" onclick="saveNutProfile()">SAVE & CALCULATE</button>
+    ${targets ? `<div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);margin-top:12px;line-height:1.9">
+      BMR: <span style="color:var(--text)">${targets.bmr} kcal</span> &nbsp;·&nbsp;
+      TDEE: <span style="color:var(--text)">${targets.tdee} kcal</span> &nbsp;·&nbsp;
+      Goal: <span style="color:var(--accent);text-transform:uppercase">${targets.goal}</span>
+    </div>` : ''}
+  </div>`;
+
+  if (!targets) {
+    document.getElementById('nutritionContent').innerHTML = html;
+    return;
+  }
+
+  // ── Date nav ──
+  html += `<div class="date-nav">
+    <button class="date-nav-btn" onclick="nutDateOffset--;renderNutrition()">◀</button>
+    <div class="date-nav-label">${nutDateLabel(nutDateOffset)} <span style="color:var(--muted);font-size:0.62rem">${dateKey}</span></div>
+    <button class="date-nav-btn" onclick="nutDateOffset=Math.min(nutDateOffset+1,0);renderNutrition()" ${nutDateOffset===0?'disabled style="opacity:0.3"':''}>▶</button>
+  </div>`;
+
+  // ── Weight log ──
+  const wKey = `wt_${dateKey}`;
+  const loggedWt = S.nutrition[wKey] || '';
+  const startWt  = profile.currentWeight;
+  const wtDelta  = loggedWt ? (parseFloat(loggedWt) - startWt).toFixed(1) : null;
+  html += `<div class="weight-log-row">
+    <input type="number" id="wtInput" value="${loggedWt}" placeholder="Log weight (lbs)" step="0.1">
+    <button class="weight-log-btn" onclick="logWeight('${dateKey}')">LOG WEIGHT</button>
+    ${wtDelta !== null ? `<div class="weight-tag">Start: ${startWt} lbs &nbsp; Change: <span style="color:${wtDelta>0?'var(--red)':'var(--green)'}">${wtDelta>0?'+':''}${wtDelta} lbs</span></div>` : ''}
+  </div>`;
+
+  // ── Macro banner ──
+  const cpct  = Math.min(100, Math.round(totals.cal  / targets.calories  * 100));
+  const ppct  = Math.min(100, Math.round(totals.p    / targets.proteinG  * 100));
+  const cbpct = Math.min(100, Math.round(totals.c    / targets.carbG     * 100));
+  const fpct  = Math.min(100, Math.round(totals.f    / targets.fatG      * 100));
+  const remCal = targets.calories - totals.cal;
+
+  html += `<div class="macro-banner">
+    <div class="macro-box cal" style="--fill:${cpct}%">
+      <div class="macro-val cal">${totals.cal}</div>
+      <div class="macro-label">Calories</div>
+      <div class="macro-target">${Math.abs(remCal)} kcal ${remCal>=0?'left':'over'}</div>
+    </div>
+    <div class="macro-box pro" style="--fill:${ppct}%">
+      <div class="macro-val pro">${totals.p}g</div>
+      <div class="macro-label">Protein</div>
+      <div class="macro-target">/ ${targets.proteinG}g</div>
+    </div>
+    <div class="macro-box carb" style="--fill:${cbpct}%">
+      <div class="macro-val carb">${totals.c}g</div>
+      <div class="macro-label">Carbs</div>
+      <div class="macro-target">/ ${targets.carbG}g</div>
+    </div>
+    <div class="macro-box fat" style="--fill:${fpct}%">
+      <div class="macro-val fat">${totals.f}g</div>
+      <div class="macro-label">Fat</div>
+      <div class="macro-target">/ ${targets.fatG}g</div>
+    </div>
+  </div>`;
+
+  // ── Meals ──
+  MEAL_NAMES.forEach(meal => {
+    const items = meals[meal] || [];
+    const mealCal = items.reduce((a,x)=>a+x.cal,0);
+    const isOpen = activeDrawerMeal === meal;
+    html += `<div class="meal-section">
+      <div class="meal-header">
+        <div class="meal-name">${meal}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="meal-cals">${mealCal > 0 ? mealCal + ' kcal' : ''}</div>
+          <button class="add-food-btn" onclick="toggleDrawer('${meal}','${dateKey}')">+ Add Food</button>
+        </div>
+      </div>
+      <div class="add-food-drawer${isOpen?' open':''}" id="drawer_${meal.replace(' ','_')}">
+        <div class="drawer-title">Quick Add — ${meal}</div>
+        <div class="food-search-row">
+          <input class="food-search-input" type="text" id="fsearch_${meal.replace(' ','_')}" placeholder="Search foods…" oninput="filterFoods('${meal}','${dateKey}')">
+        </div>
+        <div class="food-quick-list" id="flist_${meal.replace(' ','_')}">
+          ${FOOD_DB.map(f=>`<div class="food-quick-chip" onclick="quickAdd('${meal}','${dateKey}',${JSON.stringify(f).replace(/"/g,"'")})">${f.n.split(' (')[0].split(' (')[0]}</div>`).join('')}
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:1px;margin-bottom:6px;text-transform:uppercase">Custom Entry</div>
+        <div class="custom-food-grid">
+          <input type="text"   id="cf_name_${meal.replace(' ','_')}" placeholder="Food name">
+          <input type="number" id="cf_cal_${meal.replace(' ','_')}"  placeholder="kcal" min="0">
+          <input type="number" id="cf_p_${meal.replace(' ','_')}"    placeholder="Prot g" min="0">
+          <input type="number" id="cf_c_${meal.replace(' ','_')}"    placeholder="Carb g" min="0">
+          <input type="number" id="cf_f_${meal.replace(' ','_')}"    placeholder="Fat g" min="0">
+        </div>
+        <button class="log-food-btn" onclick="logCustomFood('${meal}','${dateKey}')">LOG FOOD</button>
+      </div>
+      ${items.map((item,idx)=>`
+        <div class="food-entry">
+          <div class="food-name">${item.n}</div>
+          <div class="food-macro c">${item.cal} kcal</div>
+          <div class="food-macro">P ${item.p}g</div>
+          <div class="food-macro">C ${item.c}g</div>
+          <div class="food-macro">F ${item.f}g</div>
+          <button class="del-food" onclick="deleteFood('${meal}','${dateKey}',${idx})" title="Remove">✕</button>
+        </div>`).join('')}
+    </div>`;
+  });
+
+  document.getElementById('nutritionContent').innerHTML = html;
+}
+
+function saveNutProfile() {
+  S.nutProfile = {
+    currentWeight: parseFloat(document.getElementById('sp_cw').value) || 0,
+    goalWeight:    parseFloat(document.getElementById('sp_gw').value) || 0,
+    heightFt:      parseFloat(document.getElementById('sp_hft').value) || 0,
+    heightIn:      parseFloat(document.getElementById('sp_hin').value) || 0,
+    age:           parseInt(document.getElementById('sp_age').value) || 0,
+    sex:           document.getElementById('sp_sex').value,
+    activity:      document.getElementById('sp_act').value,
+  };
+  save(); renderNutrition();
+}
+
+function toggleDrawer(meal, dateKey) {
+  activeDrawerMeal = activeDrawerMeal === meal ? null : meal;
+  renderNutrition();
+  if (activeDrawerMeal) {
+    setTimeout(()=>{
+      const el = document.getElementById('drawer_'+meal.replace(' ','_'));
+      if (el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }, 50);
+  }
+}
+
+function filterFoods(meal, dateKey) {
+  const q = document.getElementById('fsearch_'+meal.replace(' ','_')).value.toLowerCase();
+  const list = document.getElementById('flist_'+meal.replace(' ','_'));
+  list.innerHTML = FOOD_DB
+    .filter(f => f.n.toLowerCase().includes(q))
+    .map(f=>`<div class="food-quick-chip" onclick="quickAdd('${meal}','${dateKey}',${JSON.stringify(f).replace(/"/g,"'")})">${f.n.split(' (')[0]}</div>`)
+    .join('');
+}
+
+function quickAdd(meal, dateKey, food) {
+  if (!S.nutrition[dateKey]) S.nutrition[dateKey] = {};
+  if (!S.nutrition[dateKey][meal]) S.nutrition[dateKey][meal] = [];
+  S.nutrition[dateKey][meal].push({n:food.n, cal:food.cal, p:food.p, c:food.c, f:food.f});
+  save(); renderNutrition();
+}
+
+function logCustomFood(meal, dateKey) {
+  const mk = meal.replace(' ','_');
+  const n   = document.getElementById('cf_name_'+mk).value.trim() || 'Custom Food';
+  const cal = parseFloat(document.getElementById('cf_cal_'+mk).value) || 0;
+  const p   = parseFloat(document.getElementById('cf_p_'+mk).value)   || 0;
+  const c   = parseFloat(document.getElementById('cf_c_'+mk).value)   || 0;
+  const f   = parseFloat(document.getElementById('cf_f_'+mk).value)   || 0;
+  if (!cal && !p && !c && !f) return;
+  if (!S.nutrition[dateKey]) S.nutrition[dateKey] = {};
+  if (!S.nutrition[dateKey][meal]) S.nutrition[dateKey][meal] = [];
+  S.nutrition[dateKey][meal].push({n, cal, p, c, f});
+  save(); renderNutrition();
+}
+
+function deleteFood(meal, dateKey, idx) {
+  S.nutrition[dateKey][meal].splice(idx, 1);
+  save(); renderNutrition();
+}
+
+function logWeight(dateKey) {
+  const v = document.getElementById('wtInput').value;
+  if (!v) return;
+  if (!S.nutrition) S.nutrition = {};
+  S.nutrition[`wt_${dateKey}`] = v;
+  save(); renderNutrition();
 }
 
 renderToday();
