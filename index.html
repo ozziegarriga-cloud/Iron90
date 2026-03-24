@@ -784,9 +784,7 @@ function exportToGarmin(day) {
 // NUTRITION TRACKER
 // ════════════════════════════════════════════════════
 
-// Quick-add food database (name, cal, protein, carbs, fat) per 100g or noted serving
 const FOOD_DB = [
-  // Proteins
   {n:'Chicken Breast (100g)',   cal:165, p:31, c:0,  f:4},
   {n:'Ground Beef 93% (100g)', cal:152, p:26, c:0,  f:5},
   {n:'Salmon (100g)',           cal:208, p:20, c:0,  f:13},
@@ -795,19 +793,16 @@ const FOOD_DB = [
   {n:'Cottage Cheese (113g)',   cal:90,  p:12, c:5,  f:2},
   {n:'Tuna Can (142g)',         cal:130, p:28, c:0,  f:1},
   {n:'Whey Protein Shake',      cal:130, p:25, c:3,  f:2},
-  // Carbs
   {n:'White Rice (100g cooked)',cal:130, p:3,  c:28, f:0},
   {n:'Oatmeal (40g dry)',       cal:150, p:5,  c:27, f:3},
   {n:'Sweet Potato (medium)',   cal:103, p:2,  c:24, f:0},
   {n:'Banana (medium)',         cal:105, p:1,  c:27, f:0},
   {n:'White Bread (1 slice)',   cal:79,  p:3,  c:15, f:1},
   {n:'Pasta (100g cooked)',     cal:131, p:5,  c:25, f:1},
-  // Fats
   {n:'Avocado (half)',          cal:120, p:2,  c:6,  f:11},
   {n:'Almonds (28g)',           cal:164, p:6,  c:6,  f:14},
   {n:'Olive Oil (1 tbsp)',      cal:119, p:0,  c:0,  f:14},
-  {n:'Peanut Butter (2 tbsp)',  cal:190, p:7,  c:7,  f:16},
-  // Mixed
+  {n:'Peanut Butter (2 tbsp)', cal:190, p:7,  c:7,  f:16},
   {n:'Whole Milk (240ml)',      cal:149, p:8,  c:12, f:8},
   {n:'Cheddar Cheese (28g)',    cal:113, p:7,  c:0,  f:9},
   {n:'Black Beans (100g)',      cal:132, p:9,  c:24, f:1},
@@ -816,239 +811,234 @@ const FOOD_DB = [
   {n:'Bagel (plain)',           cal:270, p:11, c:53, f:2},
 ];
 
-let nutDateOffset = 0; // 0 = today, -1 = yesterday, etc.
+const MEAL_NAMES = ['Breakfast','Lunch','Dinner','Snacks'];
+let nutDateOffset = 0;
 let activeDrawerMeal = null;
 
 function nutDateKey(offset) {
-  const d = new Date(); d.setDate(d.getDate() + offset);
-  return d.toISOString().slice(0,10); // YYYY-MM-DD
+  var d = new Date(); d.setDate(d.getDate() + offset);
+  return d.toISOString().slice(0,10);
 }
 
 function nutDateLabel(offset) {
   if (offset === 0) return 'TODAY';
   if (offset === -1) return 'YESTERDAY';
-  const d = new Date(); d.setDate(d.getDate() + offset);
+  var d = new Date(); d.setDate(d.getDate() + offset);
   return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
 }
 
-// ── Calorie / macro targets from profile ──────────────────
 function calcTargets(profile) {
-  if (!profile || !profile.currentWeight || !profile.heightFt || !profile.age) return null;
-  const wtKg = profile.currentWeight * 0.453592;
-  const htCm = profile.heightFt * 30.48 + (profile.heightIn || 0) * 2.54;
-  // Mifflin-St Jeor BMR
-  const bmr = profile.sex === 'F'
-    ? 10 * wtKg + 6.25 * htCm - 5 * profile.age - 161
-    : 10 * wtKg + 6.25 * htCm - 5 * profile.age + 5;
-  const actMult = {sed:1.2, light:1.375, mod:1.55, active:1.725}[profile.activity] || 1.55;
-  const tdee = Math.round(bmr * actMult);
-
-  const goalDiff = (profile.goalWeight || profile.currentWeight) - profile.currentWeight;
-  let calories = tdee;
-  if (goalDiff < -5) calories = tdee - 500;       // lose weight
-  else if (goalDiff > 5) calories = tdee + 300;    // lean bulk
-  // else maintain
-
-  // Macros
-  const proteinG  = Math.round(profile.goalWeight || profile.currentWeight); // 1g per lb goal weight
-  const proteinCal = proteinG * 4;
-  const fatCal    = Math.round(calories * 0.28);
-  const fatG      = Math.round(fatCal / 9);
-  const carbCal   = calories - proteinCal - fatCal;
-  const carbG     = Math.round(carbCal / 4);
-
-  const goal = goalDiff < -5 ? 'cut' : goalDiff > 5 ? 'bulk' : 'maintain';
-  return { calories, proteinG, carbG, fatG, tdee, bmr: Math.round(bmr), goal };
+  if (!profile) return null;
+  if (!profile.currentWeight || !profile.heightFt || !profile.age) return null;
+  var wtKg = profile.currentWeight * 0.453592;
+  var htCm = profile.heightFt * 30.48 + (profile.heightIn || 0) * 2.54;
+  var bmr = profile.sex === 'F'
+    ? 10*wtKg + 6.25*htCm - 5*profile.age - 161
+    : 10*wtKg + 6.25*htCm - 5*profile.age + 5;
+  var actMult = {sed:1.2,light:1.375,mod:1.55,active:1.725}[profile.activity] || 1.55;
+  var tdee = Math.round(bmr * actMult);
+  var goalDiff = (profile.goalWeight || profile.currentWeight) - profile.currentWeight;
+  var calories = tdee;
+  if (goalDiff < -5) calories = tdee - 500;
+  else if (goalDiff > 5) calories = tdee + 300;
+  var proteinG  = Math.round(profile.goalWeight || profile.currentWeight);
+  var proteinCal = proteinG * 4;
+  var fatCal    = Math.round(calories * 0.28);
+  var fatG      = Math.round(fatCal / 9);
+  var carbCal   = calories - proteinCal - fatCal;
+  var carbG     = Math.max(0, Math.round(carbCal / 4));
+  var goal = goalDiff < -5 ? 'cut' : goalDiff > 5 ? 'bulk' : 'maintain';
+  return { calories:calories, proteinG:proteinG, carbG:carbG, fatG:fatG, tdee:tdee, bmr:Math.round(bmr), goal:goal };
 }
 
-// ── Totals for a day ───────────────────────────────────────
 function getDayTotals(dateKey) {
-  const meals = (S.nutrition && S.nutrition[dateKey]) || {};
-  let cal=0, p=0, c=0, f=0;
-  for (const meal of Object.values(meals)) {
-    for (const item of (meal || [])) { cal+=item.cal; p+=item.p; c+=item.c; f+=item.f; }
-  }
-  return { cal:Math.round(cal), p:Math.round(p), c:Math.round(c), f:Math.round(f) };
+  var meals = (S.nutrition && S.nutrition[dateKey]) || {};
+  var cal=0,p=0,c=0,f=0;
+  MEAL_NAMES.forEach(function(m) {
+    var items = meals[m] || [];
+    items.forEach(function(item){ cal+=item.cal; p+=item.p; c+=item.c; f+=item.f; });
+  });
+  return {cal:Math.round(cal),p:Math.round(p),c:Math.round(c),f:Math.round(f)};
 }
 
-// ── Render nutrition view ──────────────────────────────────
+function saveNutProfile() {
+  var cw  = parseFloat(document.getElementById('sp_cw').value)  || 0;
+  var gw  = parseFloat(document.getElementById('sp_gw').value)  || 0;
+  var hft = parseFloat(document.getElementById('sp_hft').value) || 0;
+  var hin = parseFloat(document.getElementById('sp_hin').value) || 0;
+  var age = parseInt(document.getElementById('sp_age').value)   || 0;
+  var sex = document.getElementById('sp_sex').value;
+  var act = document.getElementById('sp_act').value;
+  if (!cw || !hft || !age) {
+    alert('Please fill in Current Weight, Height, and Age at minimum.');
+    return;
+  }
+  S.nutProfile = {currentWeight:cw, goalWeight:gw, heightFt:hft, heightIn:hin, age:age, sex:sex, activity:act};
+  save();
+  renderNutrition();
+}
+
 function renderNutrition() {
   if (!S.nutrition) S.nutrition = {};
-  const profile = S.nutProfile || null;
-  const targets = calcTargets(profile);
-  const dateKey = nutDateKey(nutDateOffset);
-  const totals  = getDayTotals(dateKey);
-  const meals   = S.nutrition[dateKey] || {};
-  const MEAL_NAMES = ['Breakfast','Lunch','Dinner','Snacks'];
+  var profile = S.nutProfile || null;
+  var targets = calcTargets(profile);
+  var dateKey = nutDateKey(nutDateOffset);
+  var totals  = getDayTotals(dateKey);
+  var meals   = S.nutrition[dateKey] || {};
 
-  let html = '';
+  var cwVal  = profile ? profile.currentWeight : '';
+  var gwVal  = profile ? profile.goalWeight    : '';
+  var hftVal = profile ? profile.heightFt      : '';
+  var hinVal = profile ? profile.heightIn      : '';
+  var ageVal = profile ? profile.age           : '';
+  var sexM   = (profile && profile.sex === 'M') ? 'selected' : '';
+  var sexF   = (profile && profile.sex === 'F') ? 'selected' : '';
+  var actSed = (profile && profile.activity === 'sed')    ? 'selected' : '';
+  var actLt  = (profile && profile.activity === 'light')  ? 'selected' : '';
+  var actMod = (profile && profile.activity === 'mod')    ? 'selected' : '';
+  var actAct = (profile && profile.activity === 'active') ? 'selected' : '';
 
-  // ── Profile setup ──
-  const showSetup = !profile || !profile.currentWeight;
-  html += `<div class="setup-card" id="setupCard" style="${showSetup ? '' : 'border-color:var(--border)'}">
-    <h3>${showSetup ? '⚙ SETUP YOUR TARGETS' : '⚙ PROFILE & TARGETS'}</h3>
-    <div class="setup-grid">
-      <div class="setup-field"><label>Current Weight (lbs)</label>
-        <input type="number" id="sp_cw" value="${profile?.currentWeight||''}" placeholder="185"></div>
-      <div class="setup-field"><label>Goal Weight (lbs)</label>
-        <input type="number" id="sp_gw" value="${profile?.goalWeight||''}" placeholder="175"></div>
-      <div class="setup-field"><label>Height (ft)</label>
-        <input type="number" id="sp_hft" value="${profile?.heightFt||''}" placeholder="5"></div>
-      <div class="setup-field"><label>Height (in)</label>
-        <input type="number" id="sp_hin" value="${profile?.heightIn||''}" placeholder="11"></div>
-      <div class="setup-field"><label>Age</label>
-        <input type="number" id="sp_age" value="${profile?.age||''}" placeholder="28"></div>
-      <div class="setup-field"><label>Sex</label>
-        <select id="sp_sex"><option value="M" ${profile?.sex==='M'?'selected':''}>Male</option><option value="F" ${profile?.sex==='F'?'selected':''}>Female</option></select></div>
-      <div class="setup-field"><label>Activity Level</label>
-        <select id="sp_act">
-          <option value="sed"    ${profile?.activity==='sed'   ?'selected':''}>Sedentary (desk job)</option>
-          <option value="light"  ${profile?.activity==='light' ?'selected':''}>Light (1–3x/week)</option>
-          <option value="mod"    ${profile?.activity==='mod'   ?'selected':''}>Moderate (3–5x/week)</option>
-          <option value="active" ${profile?.activity==='active'?'selected':''}>Very Active (6–7x/week)</option>
-        </select></div>
-    </div>
-    <button class="save-setup-btn" onclick="saveNutProfile()">SAVE & CALCULATE</button>
-    ${targets ? `<div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);margin-top:12px;line-height:1.9">
-      BMR: <span style="color:var(--text)">${targets.bmr} kcal</span> &nbsp;·&nbsp;
-      TDEE: <span style="color:var(--text)">${targets.tdee} kcal</span> &nbsp;·&nbsp;
-      Goal: <span style="color:var(--accent);text-transform:uppercase">${targets.goal}</span>
-    </div>` : ''}
-  </div>`;
+  var targLine = targets
+    ? '<div style="font-family:\'DM Mono\',monospace;font-size:0.65rem;color:var(--muted);margin-top:12px;line-height:1.9">BMR: <span style="color:var(--text)">' + targets.bmr + ' kcal</span> &nbsp;·&nbsp; TDEE: <span style="color:var(--text)">' + targets.tdee + ' kcal</span> &nbsp;·&nbsp; Goal: <span style="color:var(--accent);text-transform:uppercase">' + targets.goal + '</span></div>'
+    : '';
+
+  var html = '<div class="setup-card"><h3>' + (targets ? '⚙ PROFILE & TARGETS' : '⚙ SETUP YOUR TARGETS') + '</h3>'
+    + '<div class="setup-grid">'
+    + '<div class="setup-field"><label>Current Weight (lbs)</label><input type="number" id="sp_cw" value="' + cwVal + '" placeholder="185"></div>'
+    + '<div class="setup-field"><label>Goal Weight (lbs)</label><input type="number" id="sp_gw" value="' + gwVal + '" placeholder="175"></div>'
+    + '<div class="setup-field"><label>Height (ft)</label><input type="number" id="sp_hft" value="' + hftVal + '" placeholder="5"></div>'
+    + '<div class="setup-field"><label>Height (in)</label><input type="number" id="sp_hin" value="' + hinVal + '" placeholder="11"></div>'
+    + '<div class="setup-field"><label>Age</label><input type="number" id="sp_age" value="' + ageVal + '" placeholder="28"></div>'
+    + '<div class="setup-field"><label>Sex</label><select id="sp_sex"><option value="M" ' + sexM + '>Male</option><option value="F" ' + sexF + '>Female</option></select></div>'
+    + '<div class="setup-field"><label>Activity Level</label><select id="sp_act">'
+    + '<option value="sed" '    + actSed + '>Sedentary (desk job)</option>'
+    + '<option value="light" '  + actLt  + '>Light (1-3x/week)</option>'
+    + '<option value="mod" '    + actMod + '>Moderate (3-5x/week)</option>'
+    + '<option value="active" ' + actAct + '>Very Active (6-7x/week)</option>'
+    + '</select></div>'
+    + '</div>'
+    + '<button class="save-setup-btn" onclick="saveNutProfile()">SAVE & CALCULATE</button>'
+    + targLine + '</div>';
 
   if (!targets) {
     document.getElementById('nutritionContent').innerHTML = html;
     return;
   }
 
-  // ── Date nav ──
-  html += `<div class="date-nav">
-    <button class="date-nav-btn" onclick="nutDateOffset--;renderNutrition()">◀</button>
-    <div class="date-nav-label">${nutDateLabel(nutDateOffset)} <span style="color:var(--muted);font-size:0.62rem">${dateKey}</span></div>
-    <button class="date-nav-btn" onclick="nutDateOffset=Math.min(nutDateOffset+1,0);renderNutrition()" ${nutDateOffset===0?'disabled style="opacity:0.3"':''}>▶</button>
-  </div>`;
+  // Date nav
+  var fwdDisabled = nutDateOffset === 0 ? 'disabled style="opacity:0.3"' : '';
+  html += '<div class="date-nav">'
+    + '<button class="date-nav-btn" onclick="nutDateOffset--;renderNutrition()">&#9664;</button>'
+    + '<div class="date-nav-label">' + nutDateLabel(nutDateOffset) + ' <span style="color:var(--muted);font-size:0.62rem">' + dateKey + '</span></div>'
+    + '<button class="date-nav-btn" ' + fwdDisabled + ' onclick="nutDateOffset=Math.min(nutDateOffset+1,0);renderNutrition()">&#9654;</button>'
+    + '</div>';
 
-  // ── Weight log ──
-  const wKey = `wt_${dateKey}`;
-  const loggedWt = S.nutrition[wKey] || '';
-  const startWt  = profile.currentWeight;
-  const wtDelta  = loggedWt ? (parseFloat(loggedWt) - startWt).toFixed(1) : null;
-  html += `<div class="weight-log-row">
-    <input type="number" id="wtInput" value="${loggedWt}" placeholder="Log weight (lbs)" step="0.1">
-    <button class="weight-log-btn" onclick="logWeight('${dateKey}')">LOG WEIGHT</button>
-    ${wtDelta !== null ? `<div class="weight-tag">Start: ${startWt} lbs &nbsp; Change: <span style="color:${wtDelta>0?'var(--red)':'var(--green)'}">${wtDelta>0?'+':''}${wtDelta} lbs</span></div>` : ''}
-  </div>`;
+  // Weight log
+  var wKey    = 'wt_' + dateKey;
+  var loggedWt = S.nutrition[wKey] || '';
+  var wtDeltaHtml = '';
+  if (loggedWt) {
+    var delta = (parseFloat(loggedWt) - profile.currentWeight).toFixed(1);
+    var dColor = delta > 0 ? 'var(--red)' : 'var(--green)';
+    var dSign  = delta > 0 ? '+' : '';
+    wtDeltaHtml = '<div class="weight-tag">Start: ' + profile.currentWeight + ' lbs &nbsp; Change: <span style="color:' + dColor + '">' + dSign + delta + ' lbs</span></div>';
+  }
+  html += '<div class="weight-log-row">'
+    + '<input type="number" id="wtInput" value="' + loggedWt + '" placeholder="Log weight (lbs)" step="0.1">'
+    + '<button class="weight-log-btn" onclick="logWeight(\'' + dateKey + '\')">LOG WEIGHT</button>'
+    + wtDeltaHtml + '</div>';
 
-  // ── Macro banner ──
-  const cpct  = Math.min(100, Math.round(totals.cal  / targets.calories  * 100));
-  const ppct  = Math.min(100, Math.round(totals.p    / targets.proteinG  * 100));
-  const cbpct = Math.min(100, Math.round(totals.c    / targets.carbG     * 100));
-  const fpct  = Math.min(100, Math.round(totals.f    / targets.fatG      * 100));
-  const remCal = targets.calories - totals.cal;
+  // Macro banner
+  var cpct  = Math.min(100, Math.round(totals.cal / targets.calories  * 100));
+  var ppct  = Math.min(100, Math.round(totals.p   / targets.proteinG  * 100));
+  var cbpct = Math.min(100, Math.round(totals.c   / targets.carbG     * 100));
+  var fpct  = Math.min(100, Math.round(totals.f   / targets.fatG      * 100));
+  var remCal = targets.calories - totals.cal;
+  var remLabel = Math.abs(remCal) + ' kcal ' + (remCal >= 0 ? 'left' : 'over');
 
-  html += `<div class="macro-banner">
-    <div class="macro-box cal" style="--fill:${cpct}%">
-      <div class="macro-val cal">${totals.cal}</div>
-      <div class="macro-label">Calories</div>
-      <div class="macro-target">${Math.abs(remCal)} kcal ${remCal>=0?'left':'over'}</div>
-    </div>
-    <div class="macro-box pro" style="--fill:${ppct}%">
-      <div class="macro-val pro">${totals.p}g</div>
-      <div class="macro-label">Protein</div>
-      <div class="macro-target">/ ${targets.proteinG}g</div>
-    </div>
-    <div class="macro-box carb" style="--fill:${cbpct}%">
-      <div class="macro-val carb">${totals.c}g</div>
-      <div class="macro-label">Carbs</div>
-      <div class="macro-target">/ ${targets.carbG}g</div>
-    </div>
-    <div class="macro-box fat" style="--fill:${fpct}%">
-      <div class="macro-val fat">${totals.f}g</div>
-      <div class="macro-label">Fat</div>
-      <div class="macro-target">/ ${targets.fatG}g</div>
-    </div>
-  </div>`;
+  html += '<div class="macro-banner">'
+    + '<div class="macro-box cal" style="--fill:' + cpct + '%"><div class="macro-val cal">' + totals.cal + '</div><div class="macro-label">Calories</div><div class="macro-target">' + remLabel + '</div></div>'
+    + '<div class="macro-box pro" style="--fill:' + ppct + '%"><div class="macro-val pro">' + totals.p + 'g</div><div class="macro-label">Protein</div><div class="macro-target">/ ' + targets.proteinG + 'g</div></div>'
+    + '<div class="macro-box carb" style="--fill:' + cbpct + '%"><div class="macro-val carb">' + totals.c + 'g</div><div class="macro-label">Carbs</div><div class="macro-target">/ ' + targets.carbG + 'g</div></div>'
+    + '<div class="macro-box fat" style="--fill:' + fpct + '%"><div class="macro-val fat">' + totals.f + 'g</div><div class="macro-label">Fat</div><div class="macro-target">/ ' + targets.fatG + 'g</div></div>'
+    + '</div>';
 
-  // ── Meals ──
-  MEAL_NAMES.forEach(meal => {
-    const items = meals[meal] || [];
-    const mealCal = items.reduce((a,x)=>a+x.cal,0);
-    const isOpen = activeDrawerMeal === meal;
-    html += `<div class="meal-section">
-      <div class="meal-header">
-        <div class="meal-name">${meal}</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="meal-cals">${mealCal > 0 ? mealCal + ' kcal' : ''}</div>
-          <button class="add-food-btn" onclick="toggleDrawer('${meal}','${dateKey}')">+ Add Food</button>
-        </div>
-      </div>
-      <div class="add-food-drawer${isOpen?' open':''}" id="drawer_${meal.replace(' ','_')}">
-        <div class="drawer-title">Quick Add — ${meal}</div>
-        <div class="food-search-row">
-          <input class="food-search-input" type="text" id="fsearch_${meal.replace(' ','_')}" placeholder="Search foods…" oninput="filterFoods('${meal}','${dateKey}')">
-        </div>
-        <div class="food-quick-list" id="flist_${meal.replace(' ','_')}">
-          ${FOOD_DB.map(f=>`<div class="food-quick-chip" onclick="quickAdd('${meal}','${dateKey}',${JSON.stringify(f).replace(/"/g,"'")})">${f.n.split(' (')[0].split(' (')[0]}</div>`).join('')}
-        </div>
-        <div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:1px;margin-bottom:6px;text-transform:uppercase">Custom Entry</div>
-        <div class="custom-food-grid">
-          <input type="text"   id="cf_name_${meal.replace(' ','_')}" placeholder="Food name">
-          <input type="number" id="cf_cal_${meal.replace(' ','_')}"  placeholder="kcal" min="0">
-          <input type="number" id="cf_p_${meal.replace(' ','_')}"    placeholder="Prot g" min="0">
-          <input type="number" id="cf_c_${meal.replace(' ','_')}"    placeholder="Carb g" min="0">
-          <input type="number" id="cf_f_${meal.replace(' ','_')}"    placeholder="Fat g" min="0">
-        </div>
-        <button class="log-food-btn" onclick="logCustomFood('${meal}','${dateKey}')">LOG FOOD</button>
-      </div>
-      ${items.map((item,idx)=>`
-        <div class="food-entry">
-          <div class="food-name">${item.n}</div>
-          <div class="food-macro c">${item.cal} kcal</div>
-          <div class="food-macro">P ${item.p}g</div>
-          <div class="food-macro">C ${item.c}g</div>
-          <div class="food-macro">F ${item.f}g</div>
-          <button class="del-food" onclick="deleteFood('${meal}','${dateKey}',${idx})" title="Remove">✕</button>
-        </div>`).join('')}
-    </div>`;
+  // Meals
+  MEAL_NAMES.forEach(function(meal) {
+    var items   = meals[meal] || [];
+    var mealCal = items.reduce(function(a,x){return a+x.cal;},0);
+    var isOpen  = activeDrawerMeal === meal;
+    var mealId  = meal.replace(/\s+/g,'_');
+
+    var chipHtml = FOOD_DB.map(function(f,fi) {
+      return '<div class="food-quick-chip" onclick="quickAdd(\'' + meal + '\',\'' + dateKey + '\',' + fi + ')">' + f.n.split(' (')[0] + '</div>';
+    }).join('');
+
+    var itemsHtml = items.map(function(item,idx) {
+      return '<div class="food-entry">'
+        + '<div class="food-name">' + item.n + '</div>'
+        + '<div class="food-macro c">' + item.cal + ' kcal</div>'
+        + '<div class="food-macro">P ' + item.p + 'g</div>'
+        + '<div class="food-macro">C ' + item.c + 'g</div>'
+        + '<div class="food-macro">F ' + item.f + 'g</div>'
+        + '<button class="del-food" onclick="deleteFood(\'' + meal + '\',\'' + dateKey + '\',' + idx + ')">&#x2715;</button>'
+        + '</div>';
+    }).join('');
+
+    html += '<div class="meal-section">'
+      + '<div class="meal-header">'
+      + '<div class="meal-name">' + meal + '</div>'
+      + '<div style="display:flex;align-items:center;gap:8px">'
+      + (mealCal > 0 ? '<div class="meal-cals">' + mealCal + ' kcal</div>' : '')
+      + '<button class="add-food-btn" onclick="toggleDrawer(\'' + meal + '\',\'' + dateKey + '\')">+ Add Food</button>'
+      + '</div></div>'
+      + '<div class="add-food-drawer' + (isOpen?' open':'') + '" id="drawer_' + mealId + '">'
+      + '<div class="drawer-title">Quick Add — ' + meal + '</div>'
+      + '<div class="food-search-row"><input class="food-search-input" type="text" id="fsearch_' + mealId + '" placeholder="Search foods..." oninput="filterFoods(\'' + meal + '\',\'' + dateKey + '\')">'
+      + '</div>'
+      + '<div class="food-quick-list" id="flist_' + mealId + '">' + chipHtml + '</div>'
+      + '<div style="font-family:\'DM Mono\',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:1px;margin-bottom:6px;text-transform:uppercase">Custom Entry</div>'
+      + '<div class="custom-food-grid">'
+      + '<input type="text"   id="cf_name_' + mealId + '" placeholder="Food name">'
+      + '<input type="number" id="cf_cal_'  + mealId + '" placeholder="kcal" min="0">'
+      + '<input type="number" id="cf_p_'    + mealId + '" placeholder="Prot g" min="0">'
+      + '<input type="number" id="cf_c_'    + mealId + '" placeholder="Carb g" min="0">'
+      + '<input type="number" id="cf_f_'    + mealId + '" placeholder="Fat g" min="0">'
+      + '</div>'
+      + '<button class="log-food-btn" onclick="logCustomFood(\'' + meal + '\',\'' + dateKey + '\')">LOG FOOD</button>'
+      + '</div>'
+      + itemsHtml
+      + '</div>';
   });
 
   document.getElementById('nutritionContent').innerHTML = html;
-}
-
-function saveNutProfile() {
-  S.nutProfile = {
-    currentWeight: parseFloat(document.getElementById('sp_cw').value) || 0,
-    goalWeight:    parseFloat(document.getElementById('sp_gw').value) || 0,
-    heightFt:      parseFloat(document.getElementById('sp_hft').value) || 0,
-    heightIn:      parseFloat(document.getElementById('sp_hin').value) || 0,
-    age:           parseInt(document.getElementById('sp_age').value) || 0,
-    sex:           document.getElementById('sp_sex').value,
-    activity:      document.getElementById('sp_act').value,
-  };
-  save(); renderNutrition();
 }
 
 function toggleDrawer(meal, dateKey) {
   activeDrawerMeal = activeDrawerMeal === meal ? null : meal;
   renderNutrition();
   if (activeDrawerMeal) {
-    setTimeout(()=>{
-      const el = document.getElementById('drawer_'+meal.replace(' ','_'));
+    setTimeout(function(){
+      var el = document.getElementById('drawer_' + meal.replace(/\s+/g,'_'));
       if (el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
-    }, 50);
+    }, 80);
   }
 }
 
 function filterFoods(meal, dateKey) {
-  const q = document.getElementById('fsearch_'+meal.replace(' ','_')).value.toLowerCase();
-  const list = document.getElementById('flist_'+meal.replace(' ','_'));
+  var mealId = meal.replace(/\s+/g,'_');
+  var q = document.getElementById('fsearch_' + mealId).value.toLowerCase();
+  var list = document.getElementById('flist_' + mealId);
   list.innerHTML = FOOD_DB
-    .filter(f => f.n.toLowerCase().includes(q))
-    .map(f=>`<div class="food-quick-chip" onclick="quickAdd('${meal}','${dateKey}',${JSON.stringify(f).replace(/"/g,"'")})">${f.n.split(' (')[0]}</div>`)
+    .map(function(f,fi){ return {f:f,fi:fi}; })
+    .filter(function(x){ return x.f.n.toLowerCase().indexOf(q) !== -1; })
+    .map(function(x){ return '<div class="food-quick-chip" onclick="quickAdd(\'' + meal + '\',\'' + dateKey + '\',' + x.fi + ')">' + x.f.n.split(' (')[0] + '</div>'; })
     .join('');
 }
 
-function quickAdd(meal, dateKey, food) {
+function quickAdd(meal, dateKey, foodIndex) {
+  var food = FOOD_DB[foodIndex];
+  if (!food) return;
   if (!S.nutrition[dateKey]) S.nutrition[dateKey] = {};
   if (!S.nutrition[dateKey][meal]) S.nutrition[dateKey][meal] = [];
   S.nutrition[dateKey][meal].push({n:food.n, cal:food.cal, p:food.p, c:food.c, f:food.f});
@@ -1056,16 +1046,16 @@ function quickAdd(meal, dateKey, food) {
 }
 
 function logCustomFood(meal, dateKey) {
-  const mk = meal.replace(' ','_');
-  const n   = document.getElementById('cf_name_'+mk).value.trim() || 'Custom Food';
-  const cal = parseFloat(document.getElementById('cf_cal_'+mk).value) || 0;
-  const p   = parseFloat(document.getElementById('cf_p_'+mk).value)   || 0;
-  const c   = parseFloat(document.getElementById('cf_c_'+mk).value)   || 0;
-  const f   = parseFloat(document.getElementById('cf_f_'+mk).value)   || 0;
-  if (!cal && !p && !c && !f) return;
+  var mealId = meal.replace(/\s+/g,'_');
+  var n   = document.getElementById('cf_name_' + mealId).value.trim() || 'Custom Food';
+  var cal = parseFloat(document.getElementById('cf_cal_' + mealId).value) || 0;
+  var p   = parseFloat(document.getElementById('cf_p_'   + mealId).value) || 0;
+  var c   = parseFloat(document.getElementById('cf_c_'   + mealId).value) || 0;
+  var f   = parseFloat(document.getElementById('cf_f_'   + mealId).value) || 0;
+  if (!cal && !p && !c && !f) { alert('Enter at least one value.'); return; }
   if (!S.nutrition[dateKey]) S.nutrition[dateKey] = {};
   if (!S.nutrition[dateKey][meal]) S.nutrition[dateKey][meal] = [];
-  S.nutrition[dateKey][meal].push({n, cal, p, c, f});
+  S.nutrition[dateKey][meal].push({n:n, cal:cal, p:p, c:c, f:f});
   save(); renderNutrition();
 }
 
@@ -1075,10 +1065,10 @@ function deleteFood(meal, dateKey, idx) {
 }
 
 function logWeight(dateKey) {
-  const v = document.getElementById('wtInput').value;
+  var v = document.getElementById('wtInput').value;
   if (!v) return;
   if (!S.nutrition) S.nutrition = {};
-  S.nutrition[`wt_${dateKey}`] = v;
+  S.nutrition['wt_' + dateKey] = v;
   save(); renderNutrition();
 }
 
