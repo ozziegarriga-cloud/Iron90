@@ -833,7 +833,7 @@ function nutDateLabel(offset) {
 
 // ── Calorie / macro targets from profile ──────────────────
 function calcTargets(profile) {
-  if (!profile || !profile.currentWeight || !profile.height || !profile.age) return null;
+  if (!profile || !profile.currentWeight || !profile.heightFt || !profile.age) return null;
   const wtKg = profile.currentWeight * 0.453592;
   const htCm = profile.heightFt * 30.48 + (profile.heightIn || 0) * 2.54;
   // Mifflin-St Jeor BMR
